@@ -7,6 +7,7 @@ public class Tests {
 		System.out.println("solid dog");
 		System.out.println("lola wuz here");
 		System.out.println("new dog");
+		System.out.println("lola wuz not here");
 	}
 
 }
