@@ -64,7 +64,12 @@ class AlbumTest {
 	
 	@Test
 	void testToString() {
-		String expected = ""
+		String expected = "title, artist\n";
+		Song song = new Song("title", "artist");
+		Album album = new Album("dieLit", "playboiCarti", "genre", "year");
+		album.addSong(song);
+		System.out.println(album);
+		assertEquals(expected, album.toString());
 	}
 	
 }
