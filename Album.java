@@ -26,10 +26,6 @@ public class Album {
 		this.year = otherAlbum.year;
 	}
 	
-	public HashMap<String, Song> getSongs(){
-		return new HashMap<>(songs); 
-	}
-	
 	public String getTitle() {
 		return title;
 	}
@@ -70,4 +66,3 @@ public class Album {
 		return result;
 	}
 }
-
