@@ -86,7 +86,7 @@ public class MusicStore {
 			// adds every Song in album to songsByArtist
 			songsByArtist.addAll(album.getAllSongs());
 		}
-		return songsByArtist;
+		return songsByArtist; 
 	}
 	
 	public Album getAlbumByTitle(String title) {
