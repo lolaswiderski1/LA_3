@@ -2,6 +2,8 @@ package Model;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 public class Album {
@@ -9,7 +11,7 @@ public class Album {
 	private String title;
 	private String genre;
 	private String year;
-	private Map<String, Song> songs = new HashMap<>();
+	private Map<String, Song> songs = new LinkedHashMap<>();
 	
 	public Album(String title, String artist, String genre, String year) {
 		this.title = title;
@@ -24,6 +26,7 @@ public class Album {
 		this.title = otherAlbum.title;
 		this.genre = otherAlbum.genre;
 		this.year = otherAlbum.year;
+		this.songs = otherAlbum.songs;
 	}
 	
 	public String getTitle() {
@@ -46,7 +49,8 @@ public class Album {
 		return songs.get(songTitle);
 	}
 	
-	public ArrayList<Song> getAllSongs() {
+	// returns all songs in Album in order
+	public List<Song> getAllSongs() {
 		return new ArrayList<>(songs.values());
 	}
 	
