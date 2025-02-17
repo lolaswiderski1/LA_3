@@ -45,13 +45,19 @@ public class Album {
 		return year;
 	}
 	
-	public Song getSongByTitle(String songTitle) {
-		return songs.get(songTitle);
+	public Object[] getSongByTitle(String songTitle) {
+		Object[] result = new Object[2];
+		result[0] = title;
+		result[1] = songs.get(songTitle);
+		return result;
 	}
 	
 	// returns all songs in Album in order
-	public List<Song> getAllSongs() {
-		return new ArrayList<>(songs.values());
+	public Object[] getAllSongs() {
+		Object[] result = new Object[2];
+		result[0] = title;
+		result[1] = new ArrayList<>(songs.values());
+		return result;
 	}
 	
 	public void addSong(Song song) {
