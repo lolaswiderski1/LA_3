@@ -68,7 +68,7 @@ public class MusicStore {
 	
 	// Iterates through all Albums until the given Song title is found
 	// in one of them. The associated Song is returned.
-	public Song getSongByTitle(String title) {
+	public Object[] getSongByTitle(String title) {
 		for (Album album : albumsByTitle.values()) {
 			if (album.hasSong(title)) {
 				return album.getSongByTitle(title);
@@ -79,12 +79,15 @@ public class MusicStore {
 	}
 	
 	// Returns list of all Songs by given artist
+	@SuppressWarnings("unchecked")
 	public List<Song> getSongsByArtist(String artist) { 
 		List<Song> songsByArtist = new ArrayList<>();
 		// iterates through list of Albums with given artist
 		for (Album album : albumsByArtist.get(artist)) {
 			// adds every Song in album to songsByArtist
-			songsByArtist.addAll(album.getAllSongs());
+			ArrayList<Song> songs = (ArrayList<Song>) album.getAllSongs()[1];
+			songsByArtist.addAll(songs);
+			
 		}
 		return songsByArtist; 
 	}
