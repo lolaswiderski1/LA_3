@@ -8,7 +8,7 @@ public class PlayList {
 	private String name;
 	private Map<String, Song> songs = new LinkedHashMap<>();
 	
-	public void PlayList(String name) {
+	public PlayList(String name) {
 		this.name = name;
 	}
 	public void addSong(Song song) {
