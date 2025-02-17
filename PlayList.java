@@ -17,4 +17,7 @@ public class PlayList {
 	public void removeSong(Song song) {
 	    songs.remove(song.getTitle()); 
 	}
+	public List<Song> getSongs() {
+	    return new ArrayList<>(songs.values());
+	}
 }
