@@ -39,16 +39,16 @@ public class MusicStore {
 		try (BufferedReader br = new BufferedReader(new FileReader("albums/" + albumFilename))) {
 			// first line of file contains constructor information
             String[] firstLine = br.readLine().split(",");
-            String title = firstLine[0];
+            String albumTitle = firstLine[0];
             String artist = firstLine[1];
             String genre = firstLine[2];
             String year = firstLine[3];
-            Album newAlbum = new Album(title, artist, genre, year);
+            Album newAlbum = new Album(albumTitle, artist, genre, year);
             
             // rest of lines contains song titles to add to newAlbum
             String currSongTitle;
             while ((currSongTitle = br.readLine()) != null) {
-            	newAlbum.addSong(new Song(currSongTitle, artist));
+            	newAlbum.addSong(new Song(currSongTitle, artist, albumTitle));
             }
             
             albums.add(newAlbum);
