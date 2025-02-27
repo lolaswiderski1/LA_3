@@ -9,24 +9,24 @@ import java.util.List;
 import java.util.Map;
 
 public class MusicStore {
-	private Map<String, Album> albumsByTitle = new HashMap<>(); // title, Album
-	private Map<String, List<Album>> albumsByArtist = new HashMap<>(); // artist, Albums by artist
+	private List<Album> albums = new ArrayList<>();
 	
 	public MusicStore() {
-		initializeAlbumsLists();
+		initializeAlbumsList();
 	}
 	
 	// Iterates through albums.txt and gets each album's filename. Passes
-	// the filename into addAlbumToAlbumsMaps() which creates an Album
-	// object and adds it to the Album HashMaps.
-	private void initializeAlbumsLists() {
+	// the filename into addAlbumToAlbumsList() which creates an Album
+	// object and adds it to the albums list.
+	private void initializeAlbumsList() {
 		List<String> albumFilenames = new ArrayList<>();
 		try (BufferedReader br = new BufferedReader(new FileReader("albums/albums.txt"))) {
-            String currFilename;
-            while ((currFilename = br.readLine()) != null) { // Read line-by-line
+			// read file line by line
+			String currFilename;
+            while ((currFilename = br.readLine()) != null) {
             	currFilename = currFilename.replace(',', '_');
             	currFilename += ".txt";
-            	addAlbumToAlbumsMaps(currFilename);
+            	addAlbumToAlbumsList(currFilename);
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -34,8 +34,8 @@ public class MusicStore {
 	}
 	
 	// Creates new Album object using information from given file and
-	// adds the Album to albumsByTitle and albumsByArtist 
-	private void addAlbumToAlbumsMaps(String albumFilename) {
+	// adds the Album to albums
+	private void addAlbumToAlbumsList(String albumFilename) {
 		try (BufferedReader br = new BufferedReader(new FileReader("albums/" + albumFilename))) {
 			// first line of file contains constructor information
             String[] firstLine = br.readLine().split(",");
@@ -47,56 +47,71 @@ public class MusicStore {
             
             // rest of lines contains song titles to add to newAlbum
             String currSongTitle;
-            while ((currSongTitle = br.readLine()) != null) { // Read line-by-line
+            while ((currSongTitle = br.readLine()) != null) {
             	newAlbum.addSong(new Song(currSongTitle, artist));
             }
             
-            albumsByTitle.put(title, newAlbum);
+            albums.add(newAlbum);
             
-            if (albumsByArtist.containsKey(artist)) {
-            	albumsByArtist.get(artist).add(newAlbum);
-            }
-            else {
-            	List<Album> albums = new ArrayList<>();
-            	albums.add(newAlbum);
-            	albumsByArtist.put(artist, albums);
-            }  
         } catch (IOException e) {
             e.printStackTrace();
         }
 	}
 	
-	// Iterates through all Albums until the given Song title is found
-	// in one of them. The associated Song is returned.
-	public Object[] getSongByTitle(String title) {
-		for (Album album : albumsByTitle.values()) {
+	// Returns list of all Songs with the given title
+	public List<Song> getSongsByTitle(String title) {
+		List<Song> songsByTitle = new ArrayList<>();
+		// iterate through all albums to find Songs with title
+		for (Album album : albums) {
 			if (album.hasSong(title)) {
-				return album.getSongByTitle(title);
+				songsByTitle.add(album.getSongByTitle(title));
 			}
 		}
-		// TODO: song not found
-		return null;
+		return songsByTitle;
 	}
 	
 	// Returns list of all Songs by given artist
-	@SuppressWarnings("unchecked")
 	public List<Song> getSongsByArtist(String artist) { 
 		List<Song> songsByArtist = new ArrayList<>();
-		// iterates through list of Albums with given artist
-		for (Album album : albumsByArtist.get(artist)) {
-			// adds every Song in album to songsByArtist
-			ArrayList<Song> songs = (ArrayList<Song>) album.getAllSongs()[1];
-			songsByArtist.addAll(songs);
-			
+		// iterate through all albums to find Albums with artist
+		for (Album album : albums) {
+			if (album.getArtist().equals(artist)) {
+				// adds every Song in album to songsByArtist
+				songsByArtist.addAll(album.getAllSongs());
+			}
 		}
 		return songsByArtist; 
 	}
 	
+	// Returns the Album with the given title
 	public Album getAlbumByTitle(String title) {
-		return new Album(albumsByTitle.get(title)); 
+		 for (Album album : albums) {
+			 if (album.getTitle().equals(title)) {
+				 return new Album(album);
+			 }
+		 }
+		 // TODO album not found
+		 return null;
 	}
 	
+	// Returns list of all Albums with the given artist
 	public List<Album> getAlbumsByArtist(String artist) {
-		return new ArrayList<>(albumsByArtist.get(artist)); 
+		List<Album> albumsByArtist = new ArrayList<>();
+		// iterate through all albums to find Albums with title
+		for (Album album : albums) {
+			if (album.getArtist().equals(artist)) {
+				albumsByArtist.add(new Album(album));
+			}
+		}
+		return albumsByArtist;
+	}
+	
+	// returns list of all Albums
+	public List<Album> getAlbums() {
+		List<Album> albumsCopy = new ArrayList<>(); // deep copy of albums
+		for (Album album : albums) {
+			albumsCopy.add(new Album(album));
+		}
+		return albumsCopy;
 	}
 }
