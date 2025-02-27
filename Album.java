@@ -1,7 +1,6 @@
 package Model;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -45,23 +44,17 @@ public class Album {
 		return year;
 	}
 	
-	public Object[] getSongByTitle(String songTitle) {
-		Object[] result = new Object[2];
-		result[0] = title;
-		result[1] = songs.get(songTitle);
-		return result;
+	public Song getSongByTitle(String songTitle) {
+		return songs.get(songTitle);
 	}
 	
 	// returns all songs in Album in order
-	public Object[] getAllSongs() {
-		Object[] result = new Object[2];
-		result[0] = title;
-		result[1] = new ArrayList<>(songs.values());
-		return result;
+	public List<Song> getAllSongs() {
+		return new ArrayList<>(songs.values());
 	}
 	
 	public void addSong(Song song) {
-		songs.put(song.getTitle(), song);
+		songs.put(song.getSongTitle(), song);
 	}
 	
 	public boolean hasSong(String title) {
