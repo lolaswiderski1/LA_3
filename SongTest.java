@@ -1,4 +1,4 @@
-package Music;
+package Model;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -7,18 +7,26 @@ import org.junit.jupiter.api.Test;
 class SongTest {
 
 	@Test
-	void testGetTitle() {
-		Song song = new Song("long time", "playboi carti");
-		assertEquals("long time", song.getTitle());
+	void testGetSongTitle() {
+		Song song = new Song("long time", "playboi carti", "die lit");
+		assertEquals("long time", song.getSongTitle());
 	}
+	
 	@Test
-	void TestGetArtist() {
-		Song song = new Song("long time", "playboi carti");
+	void testGetArtist() {
+		Song song = new Song("long time", "playboi carti", "die lit");
 		assertEquals("playboi carti", song.getArtist());
 	}
+	
+	@Test
+	void testGetAlbumTitle() {
+		Song song = new Song("long time", "playboi carti", "die lit");
+		assertEquals("die lit", song.getAlbumTitle());
+	}
+	
 	@Test
 	void testToString() {
-		Song song = new Song("long time", "playboi carti");
+		Song song = new Song("long time", "playboi carti", "die lit");
 		assertEquals("long time, playboi carti", song.toString());
 	}
 }
