@@ -13,6 +13,13 @@ public class PlayList {
 		this.name = name;
 		songs = new ArrayList<Song>();
 	}
+
+	// Copy constructor
+	public PlayList(PlayList otherPlayList) {
+		this.name = otherPlayList.name;
+		this.songs = otherPlayList.songs;
+	}
+	
 	public String getName() {
 		return name;
 	}
