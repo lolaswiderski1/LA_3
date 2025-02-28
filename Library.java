@@ -123,7 +123,7 @@ class LibraryModel{
     	// return all songs with desired title
     	List<Song> songsByTitle = new ArrayList<Song>();
     	for (Song song : songs.keySet()) {
-    		if (song.getSongTitle() == title) {
+    		if (song.getSongTitle().equals(title)) {
     			songsByTitle.add(song);
     		}
     	} return songsByTitle;
@@ -133,7 +133,7 @@ class LibraryModel{
     	// return all songs by a certain artist
     	List<Song> songsByArtist = new ArrayList<Song>();
     	for (Song song : songs.keySet()) {
-    		if (song.getArtist() == artist) {
+    		if (song.getArtist().equals(artist)) {
     			songsByArtist.add(song);
     		}
     	} return songsByArtist;
@@ -142,7 +142,7 @@ class LibraryModel{
     public Album getAlbumByTitle(String title) {
     	// return an album by its title name
     	for (Album album1 : albums) {
-    		if (album1.getTitle() == title) {
+    		if (album1.getTitle().equals(title)) {
     			return album1;
     		} 
     	} 
@@ -153,7 +153,7 @@ class LibraryModel{
     	// return immutable albums list
     	List<Album> albumsByArtist = new ArrayList<Album>();
     	for (Album album1 : albums) {
-    		if (album1.getArtist() == artist) {
+    		if (album1.getArtist().equals(artist)) {
     			albumsByArtist.add(album1);
     		}
     	} return albumsByArtist;
