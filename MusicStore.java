@@ -63,8 +63,9 @@ public class MusicStore {
 		List<Song> songsByTitle = new ArrayList<>();
 		// iterate through all albums to find Songs with title
 		for (Album album : albums) {
-			if (album.hasSong(title)) {
+			if (album.hasSong(title.toLowerCase())) {
 				songsByTitle.add(album.getSongByTitle(title));
+				
 			}
 		}
 		return songsByTitle;
