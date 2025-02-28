@@ -1,4 +1,3 @@
-
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.ArrayList;
@@ -13,29 +12,29 @@ class SongTest {
 	// provides 100% coverage for song class, passes tests 100% 
 	
 	@Test
+	// test get songTitle method
 	void testGetSongTitle() {
-		// test get songTitle method
 		Song song = new Song("Jonny", "Faye Webster", "album");
 		assertEquals(song.getSongTitle(), "Jonny");
 	}
 	
 	@Test
+	// test get songArtist method
 	void testGetSongArtist() {
-		// test get songArtist method
 		Song song = new Song("Jonny", "Faye Webster", "album");
 		assertEquals(song.getArtist(), "Faye Webster");
 	}
 	
 	@Test
+	// test get albumTitle method
 	void testGetAlbumTitle() {
-		// test get albumTitle method
 		Song song = new Song("Jonny", "Faye Webster", "album");
 		assertEquals(song.getAlbumTitle(), "album");
 	}
 	
 	@Test
+	// test toString method
 	void testToString() {
-		// test toString method
 		Song song = new Song("Jonny", "Faye Webster", "album");
 		assertEquals(song.toString(), "Jonny, Faye Webster");
 	}
