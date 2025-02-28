@@ -120,25 +120,44 @@ class LibraryModel{
     }
     
     public List<Song> getSongsByTitle(String title) {
-    	// return immutable songs list
-    	return store.getSongsByTitle(title);
+    	// return all songs with desired title
+    	List<Song> songsByTitle = new ArrayList<Song>();
+    	for (Song song : songs.keySet()) {
+    		if (song.getSongTitle() == title) {
+    			songsByTitle.add(song);
+    		}
+    	} return songsByTitle;
     }
     
     public List<Song> getSongsByArtist(String artist) { 
-    	// return immutable songs list
-    	return store.getSongsByArtist(artist);
+    	// return all songs by a certain artist
+    	List<Song> songsByArtist = new ArrayList<Song>();
+    	for (Song song : songs.keySet()) {
+    		if (song.getArtist() == artist) {
+    			songsByArtist.add(song);
+    		}
+    	} return songsByArtist;
     }
    
     public Album getAlbumByTitle(String title) {
-    	// return immutable album
-    	return store.getAlbumByTitle(title);
+    	// return an album by its title name
+    	for (Album album1 : albums) {
+    		if (album1.getTitle() == title) {
+    			return album1;
+    		} 
+    	} 
+    	return null;
     }
     
     public List<Album> getAlbumsByArtist(String artist) {
     	// return immutable albums list
-    	return store.getAlbumsByArtist(artist);
+    	List<Album> albumsByArtist = new ArrayList<Album>();
+    	for (Album album1 : albums) {
+    		if (album1.getArtist() == artist) {
+    			albumsByArtist.add(album1);
+    		}
+    	} return albumsByArtist;
     }
-    
     public List<Song> getPlayList(PlayList playList) {
     	List<Song> plSongs = new ArrayList<Song>();
     	for (PlayList playList1: playLists) {
