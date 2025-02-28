@@ -1,4 +1,4 @@
-package Music;
+package Model;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -6,7 +6,6 @@ import java.util.List;
 
 class LibraryModel{
    
-	private MusicStore store;
     private HashMap<Song, Rating> songs;
     private ArrayList<PlayList> playLists;
     private ArrayList<Album> albums;
@@ -18,42 +17,28 @@ class LibraryModel{
     }
 
     public LibraryModel() {
-    	// music store
-        store = new MusicStore();
         songs = new HashMap<Song, Rating>();
         favorites = new ArrayList<Song>();
         albums = new ArrayList<Album>();  
     }
     
+    public boolean hasSong(Song song) {
+    	return songs.containsKey(song);
+    }
+    
     public void addSong(Song song) {
-    	
-    	for (Album album : store.getAlbums()) {
-    		// for each album in music store, find list of songs
-    		List<Song> songsList = album.getAllSongs();
-    		// iterate through songs
-    		for (Song song1: songsList) {
-    			// check if song is in music store
-    			if (song.getArtist().equals(song1.getArtist()) && 
-    					song.getSongTitle().equals(song1.getSongTitle()))  {
-    				// add song
-    				songs.put(song, null);
-    			}
-    		}
-    	}
+    	songs.put(song, null);
+    }
+    
+    public boolean hasAlbum(Album album) {
+    	return albums.contains(album);
     }
     
     public void addAlbum(Album album) {
-    	
-    	for (Album album1 : store.getAlbums()) {
-    		// iterate through all albums in music store
-    		if (album1.getArtist().equals(album.getArtist()) && 
-    		// if album data matches, add album
-    				album1.getTitle().equals(album.getTitle()) && 
-    				album1.getGenre().equals(album.getGenre()) &&
-    				album1.getYear().equals(album.getYear())) {
-    			// add album
-    			albums.add(album);
-    			
+    	albums.add(album);
+    	for (Song song : album.getAllSongs()) {
+    		if (!hasSong(song)) {
+    			addSong(song);
     		}
     	}
     }
@@ -100,7 +85,7 @@ class LibraryModel{
     	// return deep copy of albums list
     	ArrayList<Album> albumsCopy = new ArrayList<Album>();
     	for (Album album : albums) {
-    		albumCopy.add(new Album(album);
+    		albumsCopy.add(new Album(album));
     	}
     	return albumsCopy;
     }
@@ -109,7 +94,7 @@ class LibraryModel{
     	// return deep copy of playlists list
     	List<PlayList> playListsCopy = new ArrayList<PlayList>();
     	for (PlayList playList : playLists) {
-    		playListsCopy.add(new PlayList(playList);
+    		playListsCopy.add(new PlayList(playList));
     	}
     	return playListsCopy;
     }
