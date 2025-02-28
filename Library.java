@@ -98,18 +98,18 @@ class LibraryModel{
     
     public List<Album> getAlbums() {
     	// return deep copy of albums list
-    	ArrayList<Album> albumCopy = new ArrayList<Album>();
+    	ArrayList<Album> albumsCopy = new ArrayList<Album>();
     	for (Album album : albums) {
-    		albumCopy.add(album);
+    		albumCopy.add(new Album(album);
     	}
-    	return albumCopy;
+    	return albumsCopy;
     }
     
     public List<PlayList> getPlayLists() {
     	// return deep copy of playlists list
     	List<PlayList> playListsCopy = new ArrayList<PlayList>();
     	for (PlayList playList : playLists) {
-    		playListsCopy.add(playList);
+    		playListsCopy.add(new PlayList(playList);
     	}
     	return playListsCopy;
     }
