@@ -54,9 +54,7 @@ public class Album {
 	}
 	
 	public void addSong(Song song) {
-		if (song.getAlbumTitle() == title) {
-			songs.put(song.getSongTitle(), song);
-		}
+		songs.put(song.getSongTitle(), song);
 	}
 	
 	public boolean hasSong(String title) {
