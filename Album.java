@@ -10,7 +10,7 @@ public class Album {
 	private String title;
 	private String genre;
 	private String year;
-	private Map<String, Song> songs = new LinkedHashMap<>();
+	private List<Song> songs = new ArrayList<>();
 	
 	public Album(String title, String artist, String genre, String year) {
 		this.title = title;
@@ -45,25 +45,37 @@ public class Album {
 	}
 	
 	public Song getSongByTitle(String songTitle) {
-		return songs.get(songTitle);
+		for (Song song : songs) {
+			if (song.getSongTitle().equalsIgnoreCase(songTitle)) {
+				return song;
+			}
+		}
+		return null;
+		
 	}
 	
 	// returns all songs in Album in order
 	public List<Song> getAllSongs() {
-		return new ArrayList<>(songs.values());
+		return new ArrayList<>(songs);
 	}
 	
 	public void addSong(Song song) {
-		songs.put(song.getSongTitle(), song);
+		songs.add(song);
 	}
 	
-	public boolean hasSong(String title) {
-		return songs.containsKey(title);
+	public boolean hasSong(String songTitle) {
+		boolean hasSong = false;
+		for (Song song : songs) {
+			if (song.getSongTitle().equalsIgnoreCase(songTitle)) {
+				hasSong = true;
+			}
+		}
+		return hasSong;
 	}
 	
 	public String toString() {
 		String result = title + ", " + artist + ", " + genre + ", " + year + "\n";
-		for (Song song : songs.values()) {
+		for (Song song : songs) {
 			result += song + "\n";
 		}
 		return result;
