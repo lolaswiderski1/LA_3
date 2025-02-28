@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 
 class LibraryModel{
-   
+
     private HashMap<Song, Rating> songs;
     private ArrayList<PlayList> playLists;
     private ArrayList<Album> albums;
