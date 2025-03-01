@@ -12,7 +12,7 @@ class LibraryModel{
     
     public enum Rating {
     	// enums to represent rating avoid primitive obsession
-    	ONE, TWO, THREE, FOUR, FIVE;
+    	UNRATED, ONE, TWO, THREE, FOUR, FIVE;
     }
 
     public LibraryModel() {
@@ -26,7 +26,7 @@ class LibraryModel{
     }
     
     public void addSong(Song song) {
-    	songs.put(song, null);
+    	songs.put(song, Rating.UNRATED);
     }
     
     public boolean hasAlbum(Album album) {
@@ -107,7 +107,7 @@ class LibraryModel{
     	// return all songs with desired title
     	List<Song> songsByTitle = new ArrayList<Song>();
     	for (Song song : songs.keySet()) {
-    		if (song.getSongTitle().equals(title)) {
+    		if (song.getSongTitle().equalsIgnoreCase(title)) {
     			songsByTitle.add(song);
     		}
     	} return songsByTitle;
@@ -117,31 +117,33 @@ class LibraryModel{
     	// return all songs by a certain artist
     	List<Song> songsByArtist = new ArrayList<Song>();
     	for (Song song : songs.keySet()) {
-    		if (song.getArtist().equals(artist)) {
+    		if (song.getArtist().equalsIgnoreCase(artist)) {
     			songsByArtist.add(song);
     		}
     	} return songsByArtist;
     }
    
-    public Album getAlbumByTitle(String title) {
+    public List<Album> getAlbumsByTitle(String title) {
     	// return an album by its title name
+    	List<Album> albumsByTitle = new ArrayList<>();
     	for (Album album1 : albums) {
-    		if (album1.getTitle().equals(title)) {
-    			return album1;
+    		if (album1.getTitle().equalsIgnoreCase(title)) {
+    			albumsByTitle.add(album1);
     		} 
-    	} 
-    	return null;
+    	}
+    	return albumsByTitle;
     }
     
     public List<Album> getAlbumsByArtist(String artist) {
     	// return immutable albums list
     	List<Album> albumsByArtist = new ArrayList<Album>();
     	for (Album album1 : albums) {
-    		if (album1.getArtist().equals(artist)) {
+    		if (album1.getArtist().equalsIgnoreCase(artist)) {
     			albumsByArtist.add(album1);
     		}
     	} return albumsByArtist;
     }
+    
     public List<Song> getPlayList(PlayList playList) {
     	List<Song> plSongs = new ArrayList<Song>();
     	for (PlayList playList1: playLists) {
