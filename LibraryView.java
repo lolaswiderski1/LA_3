@@ -1,9 +1,14 @@
-package Model;
 
+package Music;
+
+import java.util.HashSet;
 import java.util.List;
 import java.util.Scanner;
+import java.util.Set;
 
-public class View {
+import Music.LibraryModel.Rating;
+
+public class LibraryView {
 	
 	    private static MusicStore musicStore = new MusicStore();
 	    private static Scanner scanner = new Scanner(System.in);
@@ -44,34 +49,34 @@ public class View {
 					musicStoreOptions();
 					break;
 				case 1:
-					
+					songByTitle();
 					break;
 				case 2:	
-
+					songByArtist();
 					break;
 				case 3:	
-
+					albumByTitle();
 					break;
 				case 4:	
-
+					albumByArtist();
 					break;
 				case 5:	
 					searchForPlayListByName();
 					break;
 				case 6:	
-
+					displaySongsInLib();
 					break;
 				case 7:	
-
+					displayArtistsInLib();
 					break;
 				case 8:	
-
+					displayAlbumsInLib();
 					break;
 				case 9:	
 					displayPlayLists();
 					break;
 				case 10:	
-
+					displayFavorites();
 					break;
 				case 11:	
 					createPlayList();
@@ -105,14 +110,15 @@ public class View {
 					List<Song> songsByTitle = musicStore.getSongsByTitle(titleS);
 					//System.out.println(songsByTitle.size());
 					addSongToLibrary(songsByTitle);
+					home();
 					break;
 			
-				
 				case 2:		// song by artist
 					System.out.println("Enter artist name: ");
 					String artistS = scanner.nextLine().toLowerCase();
 					List<Song> songsByArtist = musicStore.getSongsByArtist(artistS);
 					addSongToLibrary(songsByArtist);
+					home();
 					break;
 					
 				case 3:		// album by title
@@ -120,6 +126,7 @@ public class View {
 					String titleA = scanner.nextLine().toLowerCase();
 					List<Album> albumsByTitle = musicStore.getAlbumsByTitle(titleA);
 					addAlbumToLibrary(albumsByTitle);
+					home();
 					break;
 				
 				case 4:		// albums by artist
@@ -127,6 +134,7 @@ public class View {
 					String artistA = scanner.nextLine().toLowerCase();
 					List<Album> albumsByArtist = musicStore.getAlbumsByArtist(artistA);
 					addAlbumToLibrary(albumsByArtist);
+					home();
 					break;
 			}
 		}
@@ -270,6 +278,136 @@ public class View {
 			home();
 		}
 		
+		private static int songOptions(Song song) {
+			System.out.println("[0] - rate song");
+			System.out.println("[1] - favorite song");
+			int option = scanner.nextInt();
+			return option;
+		}
 		
+		private static void songByTitle() {
+			System.out.println("Enter song title: \n");
+			String title = scanner.nextLine();
+			List<Song> songsList = lib.getSongsByTitle(title);
+			System.out.println(lib.getSongTitles().size());
+			displaySongs(songsList);
+			selectSong(songsList);
+		}
+			
+		public static Rating rateSong(String songTitle) {
+			System.out.println("Enter song rating 1-5: ");
+			Rating setRating = null;
+			int rating = scanner.nextInt();
+			switch (rating) {
+			case 1:
+				setRating = setRating.ONE;
+				System.out.println(songTitle + " has been rated a " + rating);
+				home();
+				break;
+			
+			case 2:
+				setRating = setRating.TWO;
+				System.out.println(songTitle + " has been rated a " + rating);
+				home();
+				break;
+			case 3:
+				setRating = setRating.THREE;
+				System.out.println(songTitle + " has been rated a " + rating);
+				home();
+				break;
+			case 4:
+				setRating = setRating.FOUR;
+				System.out.println(songTitle + " has been rated a " + rating);
+				home();
+				break;
+			case 5:
+				setRating = setRating.FIVE;
+				System.out.println(songTitle + " has been rated a " + rating);
+				System.out.println(songTitle + " has been added to favorites!");
+				home();
+				break;
+			}
+			return setRating;
+	}
 		
-}
+		private static void selectSong(List<Song> songsList) {
+			if (lib.getSongTitles().size() == 0) {
+				System.out.println("Library is empty.");
+				home();
+				return;
+			}
+			System.out.println("Select song from library: ");
+			Song selectedSong = songsList.get(scanner.nextInt());
+			switch(songOptions(selectedSong)) {
+				case 0:
+					lib.rateSong(selectedSong, rateSong(selectedSong.getSongTitle()));
+					break;
+				case 1:
+					lib.addFavorite(selectedSong);
+					System.out.println(selectedSong.getSongTitle() +" has been added to favorites!");
+					home();
+			}
+		}
+		private static void songByArtist() {
+			System.out.println("Enter song artist: \n");
+			String artist = scanner.nextLine();
+			List<Song> songsList = lib.getSongsByTitle(artist);
+			displaySongs(songsList);
+			selectSong(songsList);
+
+		}
+		
+		private static void albumByArtist() {
+			System.out.println("Enter album artist: \n");
+			String artist = scanner.nextLine();
+			List<Album> songsList = lib.getAlbumsByArtist(artist);
+			displayAlbums(songsList);
+			home();
+		}
+		
+		private static void albumByTitle() {
+			System.out.println("Enter album title: \n");
+			String title = scanner.nextLine();
+			List<Album> songsList = lib.getAlbumsByTitle(title);
+			displayAlbums(songsList);
+			home();
+		}
+		private static void displaySongsInLib() {
+		    int i = 0;
+		    for (Song song : lib.getAllSongs()) {
+		        System.out.println("[" + i + "] " + song.getSongTitle() + ", " + song.getArtist());
+		        i++;
+		    }
+		    home();
+		}
+		
+		private static void displayArtistsInLib() {
+		    // Use HashSet to store unique artists
+		    Set<String> artists = new HashSet<>(lib.getSongArtists());
+
+		    int index = 0;
+		    for (String artist : artists) {
+		        System.out.println("[" + index + "] " + artist);
+		        index++;
+		    }
+
+		    home();
+		}
+		
+		public static void displayAlbumsInLib() {
+			for (int i = 0; i < lib.getAlbums().size();i++) {
+				System.out.println("["+ i + "]" + " " + lib.getAlbums().get(i).getTitle() + ", " +
+			lib.getAlbums().get(i).getArtist() + ", " + lib.getAlbums().get(i).getGenre() + ", " +
+						lib.getAlbums().get(i).getYear());
+			}
+			home();
+		}
+		
+		public static void displayFavorites() {
+			System.out.println("Favorite songs:");
+			List<Song> songsList = lib.getFavorites();
+			displaySongs(songsList);
+			home();
+		}
+	}
+
