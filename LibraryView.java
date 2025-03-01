@@ -13,15 +13,15 @@ public class View {
 			home();
 		}
 		
-		public static void home() {
+		private static void home() {
 			//System.out.println("----------------------------------------------------------");
 			System.out.println("\nWelcome to your personal music library!\n");
 			
 			// give initial options
 			System.out.println("[0] - add songs or albums from the music store");
-			System.out.println("[1] - search for song by artist");
-			System.out.println("[2] - search for album by title");
-			System.out.println("[3] - search for album by artist");
+			System.out.println("[1] - search for song by title");
+			System.out.println("[2] - search for song by artist");
+			System.out.println("[3] - search for album by title");
 			System.out.println("[4] - search for album by artist");
 			System.out.println("[5] - search for playlist by name");
 			System.out.println("[6] - display a list of all songs in your library");
@@ -30,8 +30,7 @@ public class View {
 			System.out.println("[9] - display a list of all playlists in your library");
 			System.out.println("[10] - display a list of all favorite songs");
 			System.out.println("[11] - create a playlist");
-			System.out.println("[12] - add or remove songs from a playlist");
-			System.out.println("[13] - 	QUIT PROGRAM");
+			System.out.println("[12] - 	QUIT PROGRAM");
 			
 			// select choice
 			int choice = scanner.nextInt();
@@ -45,7 +44,7 @@ public class View {
 					musicStoreOptions();
 					break;
 				case 1:
-
+					
 					break;
 				case 2:	
 
@@ -57,7 +56,7 @@ public class View {
 
 					break;
 				case 5:	
-
+					searchForPlayListByName();
 					break;
 				case 6:	
 
@@ -69,18 +68,15 @@ public class View {
 
 					break;
 				case 9:	
-
+					displayPlayLists();
 					break;
 				case 10:	
 
 					break;
 				case 11:	
-
+					createPlayList();
 					break;
 				case 12:	
-
-					break;
-				case 13:	
 
 					break;
 			}
@@ -88,9 +84,9 @@ public class View {
 		
 		private static void musicStoreOptions() {
 			System.out.println("[0] - return to library");
-			System.out.println("[1] - search for song by artist");
-			System.out.println("[2] - search for album by title");
-			System.out.println("[3] - search for album by artist");
+			System.out.println("[1] - search for song by title");
+			System.out.println("[2] - search for song by artist");
+			System.out.println("[3] - search for album by title");
 			System.out.println("[4] - search for album by artist");
 			
 			// select choice
@@ -135,7 +131,7 @@ public class View {
 			}
 		}
 		
-		public static void addSongToLibrary(List<Song> songs) {
+		private static void addSongToLibrary(List<Song> songs) {
 			displaySongs(songs);
 			
 			System.out.println("Select song to add: ");
@@ -146,15 +142,16 @@ public class View {
 			
 			lib.addSong(selectedSong);
 			System.out.println(selectedSong + " has been added to library. \n");
+			home();
 		}
 	    
-		public static void displaySongs(List<Song> songs) {
+		private static void displaySongs(List<Song> songs) {
 			for (int i = 0; i < songs.size(); i++) {
 				System.out.println("[" + i + "] " + songs.get(i) + ", " + songs.get(i).getAlbumTitle());
 			}
 		}
 		
-		public static void displayAlbums(List<Album> albums) {			
+		private static void displayAlbums(List<Album> albums) {			
 			for (int i = 0; i < albums.size(); i++) {
 				System.out.println("[" + i + "] " + albums.get(i).getTitle()
 						+ ",  " + albums.get(i).getArtist()
@@ -167,7 +164,7 @@ public class View {
 			}
 		}
 		
-		public static void addAlbumToLibrary(List<Album> albums) {
+		private static void addAlbumToLibrary(List<Album> albums) {
 			displayAlbums(albums);
 			
 			System.out.println("Select album to add: ");
@@ -178,6 +175,101 @@ public class View {
 			
 			lib.addAlbum(selectedAlbum);
 			System.out.println(selectedAlbum.getTitle() + " has been added to library. \n");
+			home();
 		}
+		
+		private static void displayPlayList(PlayList playList) {
+			System.out.println("Selected playlist: " + playList.getName());
+			System.out.println("     Songs in " + playList.getName() + ":");
+			for (Song song : playList.getSongs()) {
+				System.out.println("     " + song.getSongTitle());
+			}
+		}
+		
+		// task 5
+		private static void searchForPlayListByName() {
+			System.out.println("Enter name of playlist: ");
+			String name = scanner.nextLine();
+			for (PlayList playList : lib.getPlayLists()) {
+				if (playList.getName().equalsIgnoreCase(name)) {
+					playListChoices(playList);
+				}
+			}
+		}
+		
+		// task 9
+		private static void displayPlayLists() {
+			List<PlayList> playLists = lib.getPlayLists();
+			for (int i = 0; i < playLists.size(); i++) {
+				System.out.println("[" + i + "] " + playLists.get(i).getName()); 
+			}
+			System.out.println("[" + playLists.size() + "] " + "Return Home");
+			
+			System.out.println("Select playlist.");
+			int choice = scanner.nextInt();
+			if (choice == playLists.size()) {
+				home();
+				return;
+			}
+			
+			PlayList selectedPlayList = playLists.get(choice);
+			playListChoices(selectedPlayList);
+		}
+		
+		private static void playListChoices(PlayList playList) {
+			displayPlayList(playList);
+			System.out.println("[0] - add a song");
+			System.out.println("[1] - remove a song");
+			System.out.println("[2] - Return Home");
+			
+			int choice = scanner.nextInt();
+			switch(choice) {
+				case 0:
+					addSongToPlayList(playList);
+					break;
+				case 1:
+					removeSongFromPlayList(playList);
+					break;
+				case 2:
+					home();
+			}
+		}
+		
+		private static void addSongToPlayList(PlayList playList) {
+			List<Song> allSongs = lib.getAllSongs();
+			displaySongs(allSongs);
+			System.out.println("Select song to add: ");
+			int choice = scanner.nextInt();
+			Song selectedSong = allSongs.get(choice);
+			if (playList.hasSong(selectedSong)) {
+				System.out.println("Song already exists in playlist");
+				home();
+			}
+			playList.addSong(selectedSong);
+			System.out.println(selectedSong + "has been added to " + playList.getName() + "\n");
+			home();
+		}
+		
+		private static void removeSongFromPlayList(PlayList playList) {
+			List<Song> songsInPlayList = playList.getSongs();
+			displaySongs(songsInPlayList);
+			System.out.println("Select song to remove: ");
+			int choice = scanner.nextInt();
+			Song selectedSong = songsInPlayList.get(choice);
+			playList.removeSong(selectedSong);
+			System.out.println(selectedSong + "has been removed from " + playList.getName() + "\n");
+			home();
+		}
+		
+		// task 11 
+		private static void createPlayList() {
+			System.out.println("Enter name of playlist: ");
+			String name = scanner.nextLine();
+			PlayList newPL = new PlayList(name);
+			lib.addPlaylist(newPL);
+			home();
+		}
+		
+		
 		
 }
