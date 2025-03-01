@@ -106,7 +106,14 @@ class LibraryModel{
     	}
     	return albumsCopy;
     }
-    
+    public List<String> getAlbumTitles() {
+    	// return deep copy of albums list
+    	ArrayList<String> albumTitles = new ArrayList<String>();
+    	for (Album album : albums) {
+    		albumTitles.add(album.getTitle());
+    	}
+    	return albumTitles;
+    }
     public List<PlayList> getPlayLists() {
     	// return deep copy of playlists list
     	List<PlayList> playListsCopy = new ArrayList<PlayList>();
