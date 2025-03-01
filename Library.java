@@ -1,14 +1,15 @@
 
-package Music;
+package Model;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Set;
 
 class LibraryModel{
-    private HashMap<Song, Rating> songs;
+    private LinkedHashMap<Song, Rating> songs;
     private ArrayList<PlayList> playLists;
     private ArrayList<Album> albums;
     private ArrayList<Song> favorites;
@@ -19,14 +20,14 @@ class LibraryModel{
     }
 
     public LibraryModel() {
-        songs = new HashMap<Song, Rating>();
+        songs = new LinkedHashMap<Song, Rating>();
         favorites = new ArrayList<Song>();
         albums = new ArrayList<Album>();  
         playLists = new ArrayList<PlayList>();
     }
     
-    public Set<Song> getAllSongs() {
-        return songs.keySet();
+    public List<Song> getAllSongs() {
+        return new ArrayList<>(songs.keySet());
     }
     
     
@@ -88,7 +89,7 @@ class LibraryModel{
     public Set<String> getSongArtists() {
         // Use HashSet to store unique artist names
         Set<String> artists = new HashSet<>();
-
+        
         // Iterate over the song keys and collect artist names
         for (Song song : songs.keySet()) {
             artists.add(song.getArtist());
