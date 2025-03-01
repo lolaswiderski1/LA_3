@@ -56,7 +56,25 @@ class LibraryModel{
     public void addPlaylist(PlayList pl) {
     	playLists.add(pl);
     }
-    
+     public boolean hasAlbumByArtist(String artist) {
+    	boolean result = false;
+    	for (Album album : albums) {
+    		if (album.getArtist().equalsIgnoreCase(artist)) {
+    			result = true;
+    		}
+    	}
+    	return result;
+    }
+   
+    public boolean hasAlbumByTitle(String title) {
+    	boolean result = false;
+    	for (Album album : albums) {
+    		if (album.getTitle().equalsIgnoreCase(title)) {
+    			result = true;
+    		}
+    	}
+    	return result;
+    }
     public void rateSong(Song song, Rating rating) {
     	
     	for (Song song1 : songs.keySet()) {
