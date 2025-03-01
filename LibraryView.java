@@ -20,6 +20,7 @@ public class View {
 		
 		// main display page for library
 		private static void home() {
+			
 			System.out.println("\nWelcome to your personal music library!\n");
 			
 			// give initial options
@@ -39,6 +40,7 @@ public class View {
 			
 			// select choice
 			int choice = scanner.nextInt();
+			scanner.nextLine();
 			//scanner.nextLine();
 			mainChoice(choice);
 		}
@@ -89,6 +91,7 @@ public class View {
 					System.out.println("Invalid input");
 					home();
 					return;
+					
 			}
 		}
 		
@@ -149,6 +152,7 @@ public class View {
 			
 			System.out.println("Select song to add: ");
 			int choice = scanner.nextInt();
+			scanner.nextLine();
 			Song selectedSong = songs.get(choice);
 			if (lib.hasSong(selectedSong)) {
 				System.out.println("Song already exists in library. ");	
@@ -186,6 +190,7 @@ public class View {
 			
 			System.out.println("Select album to add: ");
 			int choice =  scanner.nextInt();
+			scanner.nextLine();
 			Album selectedAlbum = albums.get(choice);
 			if (lib.hasAlbum(selectedAlbum)) {
 				System.out.println("Album already exists in library. ");	
@@ -228,6 +233,7 @@ public class View {
 			
 			System.out.println("Select playlist.");
 			int choice = scanner.nextInt();
+			scanner.nextLine();
 			if (choice == playLists.size()) {
 				home();
 				return;
@@ -245,6 +251,7 @@ public class View {
 			System.out.println("[2] - Return Home");
 			
 			int choice = scanner.nextInt();
+			scanner.nextLine();
 			switch(choice) {
 				case 0:
 					addSongToPlayList(playList);
@@ -263,6 +270,7 @@ public class View {
 			displaySongs(allSongs);
 			System.out.println("Select song to add: ");
 			int choice = scanner.nextInt();
+			scanner.nextLine();
 			Song selectedSong = allSongs.get(choice);
 			if (playList.hasSong(selectedSong)) {
 				System.out.println("Song already exists in playlist");
@@ -279,6 +287,7 @@ public class View {
 			displaySongs(songsInPlayList);
 			System.out.println("Select song to remove: ");
 			int choice = scanner.nextInt();
+			scanner.nextLine();
 			Song selectedSong = songsInPlayList.get(choice);
 			playList.removeSong(selectedSong);
 			System.out.println(selectedSong + "has been removed from " + playList.getName() + "\n");
@@ -299,12 +308,16 @@ public class View {
 			System.out.println("[0] - rate song");
 			System.out.println("[1] - favorite song");
 			int option = scanner.nextInt();
+			scanner.nextLine();
 			return option;
 		}
 		
 		// displays songs with matching title to user input
 		private static void songByTitle() {
-			System.out.println("Enter song title: \n");
+			System.out.println("Enter song title:");
+			if (scanner.hasNextLine()) {  // Ensure there's input to read
+		        scanner.nextLine();  // Consume the leftover newline from previous input
+		    }
 			String title = scanner.nextLine();
 			List<Song> songsList = lib.getSongsByTitle(title);
 			//System.out.println(lib.getSongTitles().size());
@@ -317,6 +330,7 @@ public class View {
 			System.out.println("Enter song rating 1-5: ");
 			Rating setRating = null;
 			int rating = scanner.nextInt();
+			scanner.nextLine();
 			switch (rating) {
 			case 1:
 				setRating = setRating.ONE;
@@ -357,7 +371,9 @@ public class View {
 				return;
 			}
 			System.out.println("Select song from library: ");
-			Song selectedSong = songsList.get(scanner.nextInt());
+			int choice = scanner.nextInt();
+			scanner.nextLine();
+			Song selectedSong = songsList.get(choice);
 			switch(songOptions(selectedSong)) {
 				case 0:
 					lib.rateSong(selectedSong, rateSong(selectedSong.getSongTitle()));
@@ -368,17 +384,18 @@ public class View {
 					home();
 			}
 		}
+		
 		private static void songByArtist() {
-			System.out.println("Enter song artist: \n");
+			System.out.println("Enter song artist:");
 			String artist = scanner.nextLine();
-			List<Song> songsList = lib.getSongsByTitle(artist);
+			List<Song> songsList = lib.getSongsByArtist(artist);
 			displaySongs(songsList);
 			selectSong(songsList);
 
 		}
 		
 		private static void albumByArtist() {
-			System.out.println("Enter album artist: \n");
+			System.out.println("Enter album artist:");
 			String artist = scanner.nextLine();
 			List<Album> songsList = lib.getAlbumsByArtist(artist);
 			displayAlbums(songsList);
@@ -386,7 +403,7 @@ public class View {
 		}
 		
 		private static void albumByTitle() {
-			System.out.println("Enter album title: \n");
+			System.out.println("Enter album title:");
 			String title = scanner.nextLine();
 			List<Album> songsList = lib.getAlbumsByTitle(title);
 			displayAlbums(songsList);
@@ -433,4 +450,5 @@ public class View {
 		public static void endProgram() {
 			System.exit(0);
 		}
+		
 	}
