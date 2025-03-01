@@ -10,7 +10,7 @@ import Model.LibraryModel.Rating;
 
 public class View {
 	
-	    private static MusicStore musicStore = new MusicStore();
+	    private static MusicStore musicStore = new MusicStore("albums");
 	    private static Scanner scanner = new Scanner(System.in);
 	    private static LibraryModel lib = new LibraryModel(); 
 	    
