@@ -65,7 +65,9 @@ class LibraryModel{
     		}
     	}
     }
-    
+    public void addFavorite(Song song) {
+    	favorites.add(song);
+    }
     public List<String> getSongTitles() {
     	// add all song titles to string list
     	ArrayList<String> titles = new ArrayList<String>();
