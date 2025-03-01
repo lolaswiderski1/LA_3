@@ -1,14 +1,14 @@
 
-package Music;
+package Model;
 
 import java.util.HashSet;
 import java.util.List;
 import java.util.Scanner;
 import java.util.Set;
 
-import Music.LibraryModel.Rating;
+import Model.LibraryModel.Rating;
 
-public class LibraryView {
+public class View {
 	
 	    private static MusicStore musicStore = new MusicStore();
 	    private static Scanner scanner = new Scanner(System.in);
@@ -18,8 +18,8 @@ public class LibraryView {
 			home();
 		}
 		
+		// main display page for library
 		private static void home() {
-			//System.out.println("----------------------------------------------------------");
 			System.out.println("\nWelcome to your personal music library!\n");
 			
 			// give initial options
@@ -43,6 +43,7 @@ public class LibraryView {
 			mainChoice(choice);
 		}
 		
+		// switch case statement for main choices
 		private static void mainChoice(int choice) {
 			switch (choice) {
 				case 0:
@@ -82,11 +83,16 @@ public class LibraryView {
 					createPlayList();
 					break;
 				case 12:	
-
+					endProgram();
 					break;
+				default:
+					System.out.println("Invalid input");
+					home();
+					return;
 			}
 		}
 		
+		// user enters music store
 		private static void musicStoreOptions() {
 			System.out.println("[0] - return to library");
 			System.out.println("[1] - search for song by title");
@@ -108,7 +114,6 @@ public class LibraryView {
 					String titleS = scanner.nextLine().toLowerCase();
 					System.out.println(titleS);
 					List<Song> songsByTitle = musicStore.getSongsByTitle(titleS);
-					//System.out.println(songsByTitle.size());
 					addSongToLibrary(songsByTitle);
 					home();
 					break;
@@ -139,10 +144,12 @@ public class LibraryView {
 			}
 		}
 		
+		// Takes list of songs. User selects a song and it is added to library.
 		private static void addSongToLibrary(List<Song> songs) {
 			displaySongs(songs);
 			
 			System.out.println("Select song to add: ");
+			int choice = scanner.nextInt();
 			Song selectedSong = songs.get(scanner.nextInt());
 			if (lib.hasSong(selectedSong)) {
 				System.out.println("Song already exists in library. ");	
@@ -153,12 +160,14 @@ public class LibraryView {
 			home();
 		}
 	    
+		// displays a list of songs with their indexes
 		private static void displaySongs(List<Song> songs) {
 			for (int i = 0; i < songs.size(); i++) {
 				System.out.println("[" + i + "] " + songs.get(i) + ", " + songs.get(i).getAlbumTitle());
 			}
 		}
 		
+		// displays a list of albums and each song in each one
 		private static void displayAlbums(List<Album> albums) {			
 			for (int i = 0; i < albums.size(); i++) {
 				System.out.println("[" + i + "] " + albums.get(i).getTitle()
@@ -172,6 +181,7 @@ public class LibraryView {
 			}
 		}
 		
+		// Takes list of albums. User selects a album and it is added to library.
 		private static void addAlbumToLibrary(List<Album> albums) {
 			displayAlbums(albums);
 			
@@ -186,6 +196,7 @@ public class LibraryView {
 			home();
 		}
 		
+		// displays a playlist and each song in it
 		private static void displayPlayList(PlayList playList) {
 			System.out.println("Selected playlist: " + playList.getName());
 			System.out.println("     Songs in " + playList.getName() + ":");
@@ -194,7 +205,7 @@ public class LibraryView {
 			}
 		}
 		
-		// task 5
+		// user enters name and associated playlist is selected
 		private static void searchForPlayListByName() {
 			System.out.println("Enter name of playlist: ");
 			String name = scanner.nextLine();
@@ -203,9 +214,11 @@ public class LibraryView {
 					playListChoices(playList);
 				}
 			}
+			System.out.println("Playlist not found. ");
+			home();
 		}
 		
-		// task 9
+		// Shows list of playlists and lets user select one.
 		private static void displayPlayLists() {
 			List<PlayList> playLists = lib.getPlayLists();
 			for (int i = 0; i < playLists.size(); i++) {
@@ -224,6 +237,7 @@ public class LibraryView {
 			playListChoices(selectedPlayList);
 		}
 		
+		// allows user to add/remove a song from playlist
 		private static void playListChoices(PlayList playList) {
 			displayPlayList(playList);
 			System.out.println("[0] - add a song");
@@ -243,6 +257,7 @@ public class LibraryView {
 			}
 		}
 		
+		// user selects a song in library to add to playlist
 		private static void addSongToPlayList(PlayList playList) {
 			List<Song> allSongs = lib.getAllSongs();
 			displaySongs(allSongs);
@@ -258,6 +273,7 @@ public class LibraryView {
 			home();
 		}
 		
+		// user selects a song in playlist to remove
 		private static void removeSongFromPlayList(PlayList playList) {
 			List<Song> songsInPlayList = playList.getSongs();
 			displaySongs(songsInPlayList);
@@ -269,7 +285,7 @@ public class LibraryView {
 			home();
 		}
 		
-		// task 11 
+		// creates playlist with entered name
 		private static void createPlayList() {
 			System.out.println("Enter name of playlist: ");
 			String name = scanner.nextLine();
@@ -278,6 +294,7 @@ public class LibraryView {
 			home();
 		}
 		
+		// options for what to do with song
 		private static int songOptions(Song song) {
 			System.out.println("[0] - rate song");
 			System.out.println("[1] - favorite song");
@@ -285,6 +302,7 @@ public class LibraryView {
 			return option;
 		}
 		
+		// displays songs with matching title to user input
 		private static void songByTitle() {
 			System.out.println("Enter song title: \n");
 			String title = scanner.nextLine();
@@ -294,6 +312,7 @@ public class LibraryView {
 			selectSong(songsList);
 		}
 			
+		// user rates song
 		public static Rating rateSong(String songTitle) {
 			System.out.println("Enter song rating 1-5: ");
 			Rating setRating = null;
@@ -328,7 +347,8 @@ public class LibraryView {
 				break;
 			}
 			return setRating;
-	}
+		}
+		
 		
 		private static void selectSong(List<Song> songsList) {
 			if (lib.getSongTitles().size() == 0) {
@@ -384,7 +404,7 @@ public class LibraryView {
 		private static void displayArtistsInLib() {
 		    // Use HashSet to store unique artists
 		    Set<String> artists = new HashSet<>(lib.getSongArtists());
-
+		    
 		    int index = 0;
 		    for (String artist : artists) {
 		        System.out.println("[" + index + "] " + artist);
@@ -409,5 +429,8 @@ public class LibraryView {
 			displaySongs(songsList);
 			home();
 		}
+		
+		public static void endProgram() {
+			System.exit(0);
+		}
 	}
-
