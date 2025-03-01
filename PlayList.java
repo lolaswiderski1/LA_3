@@ -1,4 +1,4 @@
-package Music;
+package Model;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -18,6 +18,10 @@ public class PlayList {
 	public PlayList(PlayList otherPlayList) {
 		this.name = otherPlayList.name;
 		this.songs = otherPlayList.songs;
+	}
+	
+	public boolean hasSong(Song song) {
+		return songs.contains(song);
 	}
 	
 	public String getName() {
