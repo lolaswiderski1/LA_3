@@ -39,7 +39,7 @@ public class View {
 			
 			// select choice
 			int choice = scanner.nextInt();
-			scanner.nextLine();
+			//scanner.nextLine();
 			mainChoice(choice);
 		}
 		
@@ -111,8 +111,7 @@ public class View {
 					
 				case 1: 	// song by title
 					System.out.println("Enter song title: ");
-					String titleS = scanner.nextLine().toLowerCase();
-					System.out.println(titleS);
+					String titleS = scanner.nextLine();
 					List<Song> songsByTitle = musicStore.getSongsByTitle(titleS);
 					addSongToLibrary(songsByTitle);
 					home();
@@ -120,7 +119,7 @@ public class View {
 			
 				case 2:		// song by artist
 					System.out.println("Enter artist name: ");
-					String artistS = scanner.nextLine().toLowerCase();
+					String artistS = scanner.nextLine();
 					List<Song> songsByArtist = musicStore.getSongsByArtist(artistS);
 					addSongToLibrary(songsByArtist);
 					home();
@@ -150,7 +149,7 @@ public class View {
 			
 			System.out.println("Select song to add: ");
 			int choice = scanner.nextInt();
-			Song selectedSong = songs.get(scanner.nextInt());
+			Song selectedSong = songs.get(choice);
 			if (lib.hasSong(selectedSong)) {
 				System.out.println("Song already exists in library. ");	
 			}
@@ -186,7 +185,8 @@ public class View {
 			displayAlbums(albums);
 			
 			System.out.println("Select album to add: ");
-			Album selectedAlbum = albums.get(scanner.nextInt());
+			int choice =  scanner.nextInt();
+			Album selectedAlbum = albums.get(choice);
 			if (lib.hasAlbum(selectedAlbum)) {
 				System.out.println("Album already exists in library. ");	
 			}
@@ -307,7 +307,7 @@ public class View {
 			System.out.println("Enter song title: \n");
 			String title = scanner.nextLine();
 			List<Song> songsList = lib.getSongsByTitle(title);
-			System.out.println(lib.getSongTitles().size());
+			//System.out.println(lib.getSongTitles().size());
 			displaySongs(songsList);
 			selectSong(songsList);
 		}
