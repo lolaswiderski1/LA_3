@@ -63,7 +63,7 @@ public class MusicStore {
 		List<Song> songsByTitle = new ArrayList<>();
 		// iterate through all albums to find Songs with title
 		for (Album album : albums) {
-			if (album.hasSong(title.toLowerCase())) {
+			if (album.hasSong(title)) {
 				songsByTitle.add(album.getSongByTitle(title));
 				
 			}
@@ -76,7 +76,7 @@ public class MusicStore {
 		List<Song> songsByArtist = new ArrayList<>();
 		// iterate through all albums to find Albums with artist
 		for (Album album : albums) {
-			if (album.getArtist().equals(artist)) {
+			if (album.getArtist().equalsIgnoreCase(artist)) {
 				// adds every Song in album to songsByArtist
 				songsByArtist.addAll(album.getAllSongs());
 			}
@@ -88,12 +88,11 @@ public class MusicStore {
 	public List<Album>  getAlbumByTitle(String title) {
 		List<Album> albumsByTitle = new ArrayList<Album>();
 		 for (Album album : albums) {
-			 if (album.getTitle().equals(title)) {
-				 albumsByTitle.add(new Album(album) );
+			 if (album.getTitle().contentEquals(title)) {
+				 albumsByTitle.add(new Album(album));
 			 }
 		 }
 		 return albumsByTitle;
-		 // TODO album not found
 	}
 	
 	// Returns list of all Albums with the given artist
@@ -101,7 +100,7 @@ public class MusicStore {
 		List<Album> albumsByArtist = new ArrayList<>();
 		// iterate through all albums to find Albums with title
 		for (Album album : albums) {
-			if (album.getArtist().equals(artist)) {
+			if (album.getArtist().equalsIgnoreCase(artist)) {
 				albumsByArtist.add(new Album(album));
 			}
 		}
