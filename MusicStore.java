@@ -85,10 +85,10 @@ public class MusicStore {
 	}
 	
 	// Returns the Album with the given title
-	public List<Album>  getAlbumByTitle(String title) {
+	public List<Album>  getAlbumsByTitle(String title) {
 		List<Album> albumsByTitle = new ArrayList<Album>();
 		 for (Album album : albums) {
-			 if (album.getTitle().contentEquals(title)) {
+			 if (album.getTitle().equalsIgnoreCase(title)) {
 				 albumsByTitle.add(new Album(album));
 			 }
 		 }
