@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 
 class LibraryModel{
-
     private HashMap<Song, Rating> songs;
     private ArrayList<PlayList> playLists;
     private ArrayList<Album> albums;
@@ -146,7 +145,7 @@ class LibraryModel{
     public List<Song> getPlayList(PlayList playList) {
     	List<Song> plSongs = new ArrayList<Song>();
     	for (PlayList playList1: playLists) {
-    		// check each plalist in playlists 
+    		// check each playlist in playlists 
     		if (playList1.getName().equals(playList.getName())) {
     			// if name matches return deep copy list of songs 
     			// in playlist
