@@ -1,5 +1,6 @@
 
-package Model;
+
+package LA1;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -72,6 +73,27 @@ class LibraryModel{
     	}
     }
 
+    public boolean hasSongByTitle(String title) {
+    	boolean result = false;
+    	for (Song song : songs.keySet()) {
+    		if (song.getSongTitle().equalsIgnoreCase(title)) {
+    			result = true;
+    		}
+    	}
+    	return result;
+    }
+   
+    public boolean hasSongByArtist(String artist) {
+    	boolean result = false;
+    	for (Song song : songs.keySet()) {
+    		if (song.getArtist().equalsIgnoreCase(artist)) {
+    			result = true;
+    		}
+    	}
+    	return result;
+    }
+    
+    
     public void addFavorite(Song song) {
     	favorites.add(song);
     }
@@ -106,6 +128,7 @@ class LibraryModel{
     	}
     	return albumsCopy;
     }
+    
     public List<String> getAlbumTitles() {
     	// return deep copy of albums list
     	ArrayList<String> albumTitles = new ArrayList<String>();
@@ -114,6 +137,17 @@ class LibraryModel{
     	}
     	return albumTitles;
     }
+    
+    public List<String> getAlbumArtists() {
+    	// return deep copy of albums list
+    	ArrayList<String> albumArtists = new ArrayList<String>();
+    	for (Album album : albums) {
+    		albumArtists.add(album.getArtist());
+    	}
+    	return albumArtists;
+    }
+    
+    
     public List<PlayList> getPlayLists() {
     	// return deep copy of playlists list
     	List<PlayList> playListsCopy = new ArrayList<PlayList>();
