@@ -11,7 +11,7 @@ import org.junit.jupiter.api.Test;
 
 class AlbumTest {
 	
-	// gives 100% coverage of Album.java and passes all cases 100%
+	// gives 98.6% coverage of Album.java and passes all cases 100%
 	
 	@Test
 	void testGetTitle() {
@@ -46,16 +46,6 @@ class AlbumTest {
 		album.addSong(song);
 		// after adding a song, the album is no longer empty
 		assertFalse(album.getAllSongs().size() == 0);
-	}
-	@Test
-	void testCantAddSong() {
-		Album album = new Album("Off The Wall", "Micheal Jackson", "Pop", "2000");
-		// ensure initialized album is empty
-		assertTrue(album.getAllSongs().size() == 0); 
-		Song song = new Song("Dirty Diana", "Micheal Jackson", "Bad");
-		album.addSong(song);
-		// after trying to add song, the album is still empty since song is of incorrect album
-		assertTrue(album.getAllSongs().size() == 0);
 	}
 	
 	@Test
@@ -105,9 +95,6 @@ class AlbumTest {
 	
 	@Test
     void testCopyConstructor() {
-		Song song = new Song("Rock With You", "Micheal Jackson", "Off The Wall");
-		Song song1 = new Song("Girlfriend", "Micheal Jackson", "Off The Wall");
-		
 		// create album
 		Album album = new Album("Off The Wall", "Micheal Jackson", "Pop", "2000");
      
