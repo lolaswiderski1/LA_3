@@ -21,6 +21,10 @@ class LibraryModel{
         albums = new ArrayList<Album>();  
     }
     
+    public List<Song> getAllSongs() {
+    	return new ArrayList<>(songs.keySet());
+    }
+    
     public boolean hasSong(Song song) {
     	return songs.containsKey(song);
     }
