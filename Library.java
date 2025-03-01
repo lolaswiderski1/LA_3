@@ -1,8 +1,11 @@
-package Model;
+
+package Music;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 class LibraryModel{
     private HashMap<Song, Rating> songs;
@@ -22,9 +25,10 @@ class LibraryModel{
         playLists = new ArrayList<PlayList>();
     }
     
-    public List<Song> getAllSongs() {
-    	return new ArrayList<>(songs.keySet());
+    public Set<Song> getAllSongs() {
+        return songs.keySet();
     }
+    
     
     public boolean hasSong(Song song) {
     	return songs.containsKey(song);
@@ -66,6 +70,11 @@ class LibraryModel{
     		}
     	}
     }
+
+    public void addFavorite(Song song) {
+    	favorites.add(song);
+    }
+
     
     public List<String> getSongTitles() {
     	// add all song titles to string list
@@ -76,13 +85,16 @@ class LibraryModel{
     	return titles;
     }
     
-    public List<String> getSongArtists() {
-    	// add all song artists to string list
-    	ArrayList<String> artists = new ArrayList<String>();
-    	for (Song song : songs.keySet()) {
-    		artists.add(song.getArtist());
-    	}
-    	return artists;
+    public Set<String> getSongArtists() {
+        // Use HashSet to store unique artist names
+        Set<String> artists = new HashSet<>();
+
+        // Iterate over the song keys and collect artist names
+        for (Song song : songs.keySet()) {
+            artists.add(song.getArtist());
+        }
+
+        return artists;
     }
     
     public List<Album> getAlbums() {
