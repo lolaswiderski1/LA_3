@@ -22,6 +22,7 @@ class LibraryModel{
         songs = new HashMap<Song, Rating>();
         favorites = new ArrayList<Song>();
         albums = new ArrayList<Album>();  
+        playLists = new ArrayList<PlayList>();
     }
     
     public Set<Song> getAllSongs() {
@@ -69,9 +70,11 @@ class LibraryModel{
     		}
     	}
     }
+
     public void addFavorite(Song song) {
     	favorites.add(song);
     }
+
     
     public List<String> getSongTitles() {
     	// add all song titles to string list

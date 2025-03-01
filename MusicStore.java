@@ -89,7 +89,7 @@ public class MusicStore {
 	public List<Album>  getAlbumsByTitle(String title) {
 		List<Album> albumsByTitle = new ArrayList<Album>();
 		 for (Album album : albums) {
-			 if (album.getTitle().contentEquals(title)) {
+			 if (album.getTitle().equalsIgnoreCase(title)) {
 				 albumsByTitle.add(new Album(album));
 			 }
 		 }
