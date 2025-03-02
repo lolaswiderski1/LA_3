@@ -1,4 +1,6 @@
-
+// Sam Hershey, Lola Swiderski
+// class to simulate library model object. Contains methods necessary for a Library.
+// libraries contain playLists, songs, albums, and favorite songs
 
 package LA1;
 
@@ -10,16 +12,19 @@ import java.util.List;
 import java.util.Set;
 
 class LibraryModel{
+	
+	// instantiate variables
     private LinkedHashMap<Song, Rating> songs;
     private ArrayList<PlayList> playLists;
     private ArrayList<Album> albums;
     private ArrayList<Song> favorites;
     
+    // enum to represent rating avoid primitive obsession
     public enum Rating {
-    	// enums to represent rating avoid primitive obsession
     	UNRATED, ONE, TWO, THREE, FOUR, FIVE;
     }
-
+    
+    // construct/initialize variables
     public LibraryModel() {
         songs = new LinkedHashMap<Song, Rating>();
         favorites = new ArrayList<Song>();
@@ -27,23 +32,27 @@ class LibraryModel{
         playLists = new ArrayList<PlayList>();
     }
     
+    // get a list of all songs in library
     public List<Song> getAllSongs() {
         return new ArrayList<>(songs.keySet());
     }
     
-    
+    // check is the library has a certain song
     public boolean hasSong(Song song) {
     	return songs.containsKey(song);
     }
     
+    // add a song to the library
     public void addSong(Song song) {
     	songs.put(song, Rating.UNRATED);
     }
     
+    // check if an album is in the library
     public boolean hasAlbum(Album album) {
     	return albums.contains(album);
     }
     
+    // add an album to the library
     public void addAlbum(Album album) {
     	albums.add(album);
     	for (Song song : album.getAllSongs()) {
@@ -53,36 +62,18 @@ class LibraryModel{
     	}
     }
     
+    // add a playlist to the library
     public void addPlaylist(PlayList pl) {
     	playLists.add(pl);
     }
-     public boolean hasAlbumByArtist(String artist) {
-    	boolean result = false;
-    	for (Album album : albums) {
-    		if (album.getArtist().equalsIgnoreCase(artist)) {
-    			result = true;
-    		}
-    	}
-    	return result;
-    }
-   
-    public boolean hasAlbumByTitle(String title) {
-    	boolean result = false;
-    	for (Album album : albums) {
-    		if (album.getTitle().equalsIgnoreCase(title)) {
-    			result = true;
-    		}
-    	}
-    	return result;
-    }
+    
+    // rate a song in the library
     public void rateSong(Song song, Rating rating) {
-    	
     	for (Song song1 : songs.keySet()) {
     		// if song in songs matches song, set rating enum
     		if (song1.getSongTitle().equals(song.getSongTitle()) &&
     				song1.getArtist().equals(song.getArtist())) {
     			songs.put(song, rating);
-    			
     			// if rating = 5, add to favorites
     			if (rating == Rating.FIVE) {	
         			favorites.add(song);
@@ -90,7 +81,13 @@ class LibraryModel{
     		}
     	}
     }
-
+    
+    // retrieve the rating of a song
+    public Rating getRating(Song song) {
+    	return songs.get(song);
+    }
+    
+    // check if a song exists in the library depending on its title
     public boolean hasSongByTitle(String title) {
     	boolean result = false;
     	for (Song song : songs.keySet()) {
@@ -101,6 +98,7 @@ class LibraryModel{
     	return result;
     }
    
+    // check if the library contains songs by a certain artist
     public boolean hasSongByArtist(String artist) {
     	boolean result = false;
     	for (Song song : songs.keySet()) {
@@ -111,12 +109,34 @@ class LibraryModel{
     	return result;
     }
     
+    // check if the library contains albums by a certain artist
+    public boolean hasAlbumByArtist(String artist) {
+    	boolean result = false;
+    	for (Album album : albums) {
+    		if (album.getArtist().equalsIgnoreCase(artist)) {
+    			result = true;
+    		}
+    	}
+    	return result;
+    }
+   
+    // check if an album is in the library from its title
+    public boolean hasAlbumByTitle(String title) {
+    	boolean result = false;
+    	for (Album album : albums) {
+    		if (album.getTitle().equalsIgnoreCase(title)) {
+    			result = true;
+    		}
+    	}
+    	return result;
+    }
     
+    // add a favorite to the favorites list
     public void addFavorite(Song song) {
     	favorites.add(song);
     }
 
-    
+    // get a list of song titles
     public List<String> getSongTitles() {
     	// add all song titles to string list
     	ArrayList<String> titles = new ArrayList<String>();
@@ -126,10 +146,10 @@ class LibraryModel{
     	return titles;
     }
     
+    // get a list of all song artists
     public Set<String> getSongArtists() {
         // Use HashSet to store unique artist names
         Set<String> artists = new HashSet<>();
-        
         // Iterate over the song keys and collect artist names
         for (Song song : songs.keySet()) {
             artists.add(song.getArtist());
@@ -138,6 +158,7 @@ class LibraryModel{
         return artists;
     }
     
+    // get a list of all albums
     public List<Album> getAlbums() {
     	// return deep copy of albums list
     	ArrayList<Album> albumsCopy = new ArrayList<Album>();
@@ -147,6 +168,7 @@ class LibraryModel{
     	return albumsCopy;
     }
     
+    // get a list of all album titles
     public List<String> getAlbumTitles() {
     	// return deep copy of albums list
     	ArrayList<String> albumTitles = new ArrayList<String>();
@@ -156,6 +178,7 @@ class LibraryModel{
     	return albumTitles;
     }
     
+    // get a list of all album artists
     public List<String> getAlbumArtists() {
     	// return deep copy of albums list
     	ArrayList<String> albumArtists = new ArrayList<String>();
@@ -165,7 +188,7 @@ class LibraryModel{
     	return albumArtists;
     }
     
-    
+    // get a list of all playlists
     public List<PlayList> getPlayLists() {
     	// return deep copy of playlists list
     	List<PlayList> playListsCopy = new ArrayList<PlayList>();
@@ -175,11 +198,13 @@ class LibraryModel{
     	return playListsCopy;
     }
     
+    // get a list of the favorite songs
     public List<Song> getFavorites() {
     	// return immutable songs list
     	return new ArrayList<>(favorites);
     }
     
+    // get a list of songs with a specified title
     public List<Song> getSongsByTitle(String title) {
     	// return all songs with desired title
     	List<Song> songsByTitle = new ArrayList<Song>();
@@ -190,6 +215,7 @@ class LibraryModel{
     	} return songsByTitle;
     }
     
+    // get a list of songs by a certain artist
     public List<Song> getSongsByArtist(String artist) { 
     	// return all songs by a certain artist
     	List<Song> songsByArtist = new ArrayList<Song>();
@@ -200,6 +226,7 @@ class LibraryModel{
     	} return songsByArtist;
     }
    
+    // get a list of albums with a certain title
     public List<Album> getAlbumsByTitle(String title) {
     	// return an album by its title name
     	List<Album> albumsByTitle = new ArrayList<>();
@@ -211,6 +238,7 @@ class LibraryModel{
     	return albumsByTitle;
     }
     
+    // get a list of albums by an artist
     public List<Album> getAlbumsByArtist(String artist) {
     	// return immutable albums list
     	List<Album> albumsByArtist = new ArrayList<Album>();
@@ -221,6 +249,7 @@ class LibraryModel{
     	} return albumsByArtist;
     }
     
+    // get a list of songs within a playlist
     public List<Song> getPlayList(PlayList playList) {
     	List<Song> plSongs = new ArrayList<Song>();
     	for (PlayList playList1: playLists) {
