@@ -1,8 +1,7 @@
 // Sam Hershey, Lola Swiderski
 // class to simulate music store. It stores the songs and albums from a test file into
 // an array list making its data accesible. 
-
-package LA1;
+package Model;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -13,12 +12,11 @@ import java.util.List;
 import java.util.Map;
 
 public class MusicStore {
-	
-	// instantiate albums list
 	private List<Album> albums = new ArrayList<>();
+	String albumsDirectory;
 	
-	public MusicStore() {
-	// initialize
+	public MusicStore(String albumsDirectory) {
+		this.albumsDirectory = albumsDirectory;
 		initializeAlbumsList();
 	}
 	
@@ -27,7 +25,7 @@ public class MusicStore {
 	// object and adds it to the albums list.
 	private void initializeAlbumsList() {
 		List<String> albumFilenames = new ArrayList<>();
-		try (BufferedReader br = new BufferedReader(new FileReader("albums/albums.txt"))) {
+		try (BufferedReader br = new BufferedReader(new FileReader(albumsDirectory + "/albums.txt"))) {
 			// read file line by line
 			String currFilename;
             while ((currFilename = br.readLine()) != null) {
@@ -43,7 +41,7 @@ public class MusicStore {
 	// Creates new Album object using information from given file and
 	// adds the Album to albums
 	private void addAlbumToAlbumsList(String albumFilename) {
-		try (BufferedReader br = new BufferedReader(new FileReader("albums/" + albumFilename))) {
+		try (BufferedReader br = new BufferedReader(new FileReader(albumsDirectory + "/" + albumFilename))) {
 			// first line of file contains constructor information
             String[] firstLine = br.readLine().split(",");
             String albumTitle = firstLine[0];
