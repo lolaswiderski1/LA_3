@@ -1,113 +1,119 @@
-package Music;
+package Model;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.junit.jupiter.api.Test;
 
 class AlbumTest {
 	
-	// gives 98.6% coverage of Album.java and passes all cases 100%
+	private Album album = new Album("albumTitle", "artist", "genre", "year");
+
+	@Test
+	void testGetSongs() {
+		Song song = new Song("songTitle", "artist", "albumTitle");
+		album.addSong(song);
+		List<Song> songs = album.getAllSongs();
+		
+		List<Song> expected = new ArrayList<Song>();
+		expected.add(song);
+		assertEquals(songs,expected);
+		
+	}
 	
 	@Test
 	void testGetTitle() {
-		Album album = new Album("Off The Wall", "Micheal Jackson", "Pop", "2000");
-		assertEquals(album.getTitle(), "Off The Wall");
+		assertEquals(album.getTitle(), "albumTitle");
 	}
 	
 	@Test
 	void testGetGenre() {
-		Album album = new Album("Off The Wall", "Micheal Jackson", "Pop", "2000");
-		assertEquals(album.getGenre(), "Pop");
+		assertEquals(album.getGenre(), "genre");
 	}
 	
 	@Test
 	void testGetArtist() {
-		Album album = new Album("Off The Wall", "Micheal Jackson", "Pop", "2000");
-		assertEquals(album.getArtist(), "Micheal Jackson");
+		assertEquals(album.getArtist(), "artist");
 	}
 	
 	@Test
 	void testGetYear() {
-		Album album = new Album("Off The Wall", "Micheal Jackson", "Pop", "2000");
-		assertEquals(album.getYear(), "2000");
+		assertEquals(album.getYear(), "year");
 	}
 	
 	@Test
 	void testAddSong() {
-		Album album = new Album("Off The Wall", "Micheal Jackson", "Pop", "2000");
-		// ensure initialized album is empty
-		assertTrue(album.getAllSongs().size() == 0); 
-		Song song = new Song("Rock With You", "Micheal Jackson", "Off The Wall");
+		Song song = new Song("songTitle", "artist", "albumTitle");
+		Song song1 = new Song("song1Title", "artist1", "albumTitle");
+		Song song2 = new Song("song2Title", "artist2", "albumTitle");
 		album.addSong(song);
-		// after adding a song, the album is no longer empty
-		assertFalse(album.getAllSongs().size() == 0);
+		album.addSong(song1);
+		album.addSong(song2);
+		
+		ArrayList<Song> expected = new ArrayList<Song>();
+		expected.add(song);
+		expected.add(song1);
+		expected.add(song2);
+		assertEquals(album.getAllSongs(), expected);
 	}
 	
 	@Test
 	void testGetSongByTitle() {
-		Album album = new Album("Off The Wall", "Micheal Jackson", "Pop", "2000");
-		Song song = new Song("Rock With You", "Micheal Jackson", "Off The Wall");
+		Song song = new Song("songTitle", "artist", "albumTitle");
 		album.addSong(song);
-		assertEquals(song, album.getSongByTitle("Rock With You"));
+		
+		Song testSong = album.getSongByTitle("songTitle");
+		assertEquals(testSong, song);
+		
 	}
 	
 	@Test
-	void testGetAllSongs() {
-		Song song = new Song("Rock With You", "Micheal Jackson", "Off The Wall");
-		Song song1 = new Song("Girlfriend", "Micheal Jackson", "Off The Wall");
-		
-		// create album of two Micheal jackson songs
-		Album album = new Album("Off The Wall", "Micheal Jackson", "Pop", "2000");
-		album.addSong(song);
-		album.addSong(song1);
-		
-		// create list of songs object with same songs
-		List<Song> songsList = new ArrayList<Song>();
-		songsList.add(song);
-		songsList.add(song1);
-		
-		// assert lists are equal
-		assertEquals(songsList, album.getAllSongs());
+	void testGetSongByTitleNull() {
+		Song testSong = album.getSongByTitle("songTitle");
+		assertEquals(testSong, null);
 	}
 	
-	@Test 
+	@Test
 	void testHasSong() {
-		Album album = new Album("Off The Wall", "Micheal Jackson", "Pop", "2000");
-		Song song = new Song("Rock With You", "Micheal Jackson", "Off The Wall");
+		Song song = new Song("songTitle", "artist", "albumTitle");
 		album.addSong(song);
-		assertTrue(album.hasSong("Rock With You"));
+		
+		assertTrue(album.hasSong("songTitle"));
 	}
 	
 	@Test
 	void testToString() {
-		Album album = new Album("Off The Wall", "Micheal Jackson", "Pop", "2000");
-		Song song = new Song("Rock With You", "Micheal Jackson", "Off The Wall");
+		Song song = new Song("songTitle", "artist", "albumTitle");
+		Song song1 = new Song("song1Title", "artist1", "albumTitle");
+		
 		album.addSong(song);
-		String result = "Off The Wall" + ", " + "Micheal Jackson" + ", " + "Pop" + 
-		", " + "2000" + "\n" + song + "\n";
-		assertEquals(result, album.toString());
+		album.addSong(song1);
+		
+		String expected = "albumTitle, artist, genre, year\nsongTitle, artist\nsong1Title, artist1\n";
+		assertEquals(album.toString(), expected);
 	}
 	
 	@Test
-    void testCopyConstructor() {
-		// create album
-		Album album = new Album("Off The Wall", "Micheal Jackson", "Pop", "2000");
-     
-        // create a copy using copy constructor
-        Album copy = new Album(album);
-
-        // verify that fields are copied 
-        assertEquals(album.getTitle(), copy.getTitle());
-        assertEquals(album.getArtist(), copy.getArtist());
-        assertEquals(album.getGenre(), copy.getGenre());
-        assertEquals(album.getYear(), copy.getYear());
-
-   
-    }
+	void testCopyConstructor() {
+		Song song = new Song("songTitle", "artist", "albumTitle");
+		Song song1 = new Song("song1Title", "artist1", "albumTitle");
+		Song song2 = new Song("song2Title", "artist2", "albumTitle");
+		album.addSong(song);
+		album.addSong(song1);
+		album.addSong(song2);
+		
+		ArrayList<Song> expected = new ArrayList<Song>();
+		expected.add(song);
+		expected.add(song1);
+		expected.add(song2);
+		
+		Album album1 = new Album(album);
+		
+		assertEquals(album.getTitle(), album1.getTitle());
+        assertEquals(album.getArtist(), album1.getArtist());
+        assertEquals(album.getGenre(), album1.getGenre());
+        assertEquals(album.getYear(), album1.getYear());
+	}
 }
-
