@@ -1,4 +1,4 @@
-package Music;
+package Model;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -11,23 +11,22 @@ class PlayListTest {
 	
 	// provides 100% coverage of playlist class, and passes every case.
 	
+	PlayList playList = new PlayList("Spring 2025");
+	Song song = new Song("Rock With You", "Micheal Jackson", "Off The Wall");
+	
 	@Test
 	void testCopyConstructor() {
-		PlayList playList = new PlayList("Spring 2025");
 		PlayList copy = new PlayList(playList);
 		assertEquals(copy.getName(), playList.getName());
 	}
 	
 	@Test
 	void testGetName() {
-		PlayList playList = new PlayList("Spring 2025");
 		assertEquals(playList.getName(), "Spring 2025");
 	}
 	
 	@Test
 	void testAddSong() {
-		PlayList playList = new PlayList("Spring 2025");
-		Song song = new Song("Rock With You", "Micheal Jackson", "Off The Wall");
 		// ensure playlist is empty before adding song
 		assertTrue(playList.getSongs().size() == 0);
 		playList.addSong(song);
@@ -37,8 +36,6 @@ class PlayListTest {
 	
 	@Test
 	void testRemoveSong() {
-		PlayList playList = new PlayList("Spring 2025");
-		Song song = new Song("Rock With You", "Micheal Jackson", "Off The Wall");
 		playList.addSong(song);
 		// playlist should not be empty
 		assertFalse(playList.getSongs().size() == 0);
@@ -49,7 +46,6 @@ class PlayListTest {
 	
 	@Test 
 	void testGetSong() {
-		Song song = new Song("Rock With You", "Micheal Jackson", "Off The Wall");
 		Song song1 = new Song("Girlfriend", "Micheal Jackson", "Off The Wall");
 		
 		PlayList playList = new PlayList("Spring 2025");
@@ -63,4 +59,13 @@ class PlayListTest {
 		
 		assertEquals(playList.getSongs(), songsList);
 	}
+	
+	@Test
+	void testHasSong() {
+		assertFalse(playList.hasSong(song));
+		playList.addSong(song);
+		assertTrue(playList.hasSong(song));
+	}
+	
+	
 }
