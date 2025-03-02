@@ -419,6 +419,7 @@ public class LibraryView {
 		
 		// get a song in library by the title
 		private static void songByTitle() {
+			libIsEmpty();
 			System.out.println("Enter song title: \n");
 			String title = scanner.nextLine();
 			List<Song> songsList = lib.getSongsByTitle(title);
@@ -544,7 +545,6 @@ public class LibraryView {
 			String artist = scanner.nextLine();
 			// get desired artist and find the list using lib model method
 			List<Song> songsList = lib.getSongsByArtist(artist);
-			libIsEmpty();
 			// handle artist not being in library
 			if (!lib.hasSongByArtist(artist)) {
 				System.out.println("Can not find artist in library.");
@@ -560,10 +560,10 @@ public class LibraryView {
 		
 		// get albums by artist 
 		private static void albumByArtist() {
-			System.out.println("Enter album artist: \n");
-			String artist = scanner.nextLine();
 			// check if library is empty
 			libIsEmpty();
+			System.out.println("Enter album artist: \n");
+			String artist = scanner.nextLine();
 			// handle artist not being in library
 			if (!lib.hasAlbumByArtist(artist)) {
 				System.out.println("Can not find artist in library.");
@@ -579,10 +579,10 @@ public class LibraryView {
 		}
 		// get albums by title
 		private static void albumByTitle() {
+			libIsEmpty();
 			System.out.println("Enter album title: \n");
 			String title = scanner.nextLine();
 			// check if lib empty
-			libIsEmpty();
 			// handle exceptions
 			if (!lib.hasAlbumByTitle(title)) {
 				System.out.println("Can not find album in library.");
