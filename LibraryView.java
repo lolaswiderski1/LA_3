@@ -1,29 +1,83 @@
 // Sam Hershey, Lola Swiderski
 // class for the user to use the music library 
-package LA1;
+package view;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Scanner;
 import java.util.Set;
 
-import LA1.LibraryModel.Rating;
-
+import model.LibraryModel.Rating;
+import dataStructures.Album;
+import dataStructures.PlayList;
+import dataStructures.Song;
+import model.LibraryModel;
+import model.MusicStore;
 public class LibraryView {
 	// instantiate a music store, a scanner for the user, and a music library
-	    private static MusicStore musicStore = new MusicStore();
+	    private static MusicStore musicStore = new MusicStore("albums");
 	    private static Scanner scanner = new Scanner(System.in);
 	    private static LibraryModel lib = new LibraryModel(); 
-	    
-		public static void main(String[] args) {
+//	    private static HashMap<String, String> logins = new HashMap<>();
+//		
+	    public static void main(String[] args) {
 			// call homepage
 			home();
 		}
+//		
+//	    public static void login() {
+//	        System.out.println("[0] Login: ");
+//	        System.out.println("[1] Create login: ");
+//	        
+//	        try {
+//	            int choice = scanner.nextInt(); 
+//	            scanner.nextLine(); 
+//	            handleLogin(choice);
+//	        } catch (Exception e) {
+//	            System.out.println("Invalid input."); 
+//	            scanner.nextLine(); 
+//	            login(); 
+//	        }
+//	    }
+//		
+//		public static void handleLogin(int choice) {
+//			switch (choice) {
+//			case 0:
+//				System.out.println("Enter username: ");
+//				String username = scanner.nextLine();
+//				if (logins.containsKey(username)) {
+//					System.out.println("Enter password: ");	
+//				    String password = scanner.nextLine();
+//					if (logins.get(username).equals(password)) {
+//						System.out.println("Login successful. \n");
+//						home();
+//					}else {
+//						System.out.println("Incorrect password. \n");
+//						login();
+//					}
+//				} else {
+//					System.out.println("Username not found.");
+//					login();
+//				}
+//			case 1:
+//				System.out.println("Create username: ");
+//				//scanner.nextLine();
+//				String newUsername = scanner.nextLine();
+//				System.out.println("Create password: ");
+//				//scanner.nextLine();
+//				String newPassword = scanner.nextLine();
+//				logins.put(newUsername, newPassword);
+//				System.out.println("Login created. ");
+//				login();
+//				
+//			}
+//						
+//		}
 		
 		public static void home() {
 			// home page for the program to jump back to after actions
 			System.out.println("\nWelcome to your personal music library!\n");
-			
 			// give initial options
 			System.out.println("[0] - add songs or albums from the music store");
 			System.out.println("[1] - search for song by title");
@@ -40,10 +94,17 @@ public class LibraryView {
 			System.out.println("[12] - 	QUIT PROGRAM");
 			
 			// select choice
-			int choice = scanner.nextInt();
-			scanner.nextLine();
-			mainChoice(choice);
-		}
+			try {
+	            int choice = scanner.nextInt();
+	            scanner.nextLine(); 
+	            mainChoice(choice);
+	        } catch(Exception e) {
+	            System.out.println("Invalid input.");
+	            scanner.nextLine(); 
+	            home(); 
+	        }
+	    }
+
 		
 		private static void mainChoice(int choice) {
 			// jump to different methods depending on the user input
@@ -244,10 +305,18 @@ public class LibraryView {
 			System.out.println("[3] - search for album by title");
 			System.out.println("[4] - search for album by artist");
 			
-			// select choice
-			int choice = scanner.nextInt();
-			scanner.nextLine();
+			if (scanner.hasNextInt()) {
+	            int choice = scanner.nextInt();
+	            scanner.nextLine(); 
+	            musicStoreChoice(choice);
+	        } else {
+	            System.out.println("Invalid input.");
+	            scanner.nextLine(); 
+	            musicStoreOptions(); 
+	        }
+		}
 		
+		private static void musicStoreChoice(int choice) {
 			switch (choice) {
 				 
 				case 0:
@@ -332,10 +401,19 @@ public class LibraryView {
 			// display songs to add
 			displaySongs(songs);
 			System.out.println("Select song to add: ");
-			int selectIndex = scanner.nextInt();
-			scanner.nextLine();
+			try {
+				int selectIndex = scanner.nextInt();
+				scanner.nextLine();
+				addSongToLibrary(selectIndex, songs);
+			}catch(Exception e){
+				System.out.println("Invalid input.");
+				scanner.nextLine();
+				addSongToLibrary(songs);
+			}
+		}
+		private static void addSongToLibrary(int i, List<Song> songs) {
 			// find desired song
-			Song selectedSong = songs.get(selectIndex);
+			Song selectedSong = songs.get(i);
 			// handle exceptions
 			if (lib.hasSong(selectedSong)) {
 				System.out.println("Song already exists in library. ");	
@@ -378,14 +456,26 @@ public class LibraryView {
 			displayAlbums(albums);
 			
 			System.out.println("Select album to add: ");
-			int selectedAlbumIndex = scanner.nextInt();
+			if (scanner.hasNextInt()) {
+				int selectedAlbumIndex = scanner.nextInt();
+	            scanner.nextLine(); 
+	            albumChoice(selectedAlbumIndex, albums);
+	        } else {
+	            System.out.println("Invalid input.");
+	            scanner.nextLine(); 
+	            addAlbumToLibrary(albums); 
+	        }
+			
+		}
+		
+		private static void albumChoice(int choice, List<Album> albums) {
 			// handle out of range exceptions
-			if (selectedAlbumIndex < 0 || selectedAlbumIndex > albums.size()) {
-				System.out.println("Invalid input: " + selectedAlbumIndex + "\n");
+			if (choice < 0 || choice > albums.size()) {
+				System.out.println("Invalid input: " + choice + "\n");
 				home();
 			}
 			// get desired album
-			Album selectedAlbum = albums.get(selectedAlbumIndex);
+			Album selectedAlbum = albums.get(choice);
 			
 			// handle exception that albums is already in the library
 			if (lib.hasAlbum(selectedAlbum)) {
@@ -405,16 +495,25 @@ public class LibraryView {
 			System.out.println("[0] - home");
 			System.out.println("[1] - rate song");
 			System.out.println("[2] - favorite song");
-			int option = scanner.nextInt();
-			scanner.nextLine();
-			// handle bounds exceptions
-			if (option < 0 || option > 2) {
-				System.out.println("Invalid input: " + option + "\n");
-				// return to homepage
-				home();
-			}
-			// return desired option
-			return option;
+			if (scanner.hasNextInt()) {
+				
+				int option = scanner.nextInt();
+	            scanner.nextLine(); 
+	            
+	            if (option < 0 || option > 2) {
+					System.out.println("Invalid input: " + option + "\n");
+					// return to homepage
+					home();
+				}
+	            
+	            return option;
+	        
+			} else {
+	            System.out.println("Invalid input.");
+	            scanner.nextLine(); 
+	            home(); 
+	        }
+			return 0;
 		}
 		
 		// get a song in library by the title
@@ -451,69 +550,87 @@ public class LibraryView {
 		
 		// method used to rate a song 
 		public static Rating rateSong(Song song) {
-			System.out.println("Enter song rating 1-5: ");
-			Rating setRating = null;
 			String songTitle = song.getSongTitle();
+			Rating setRating = null;
+			System.out.println("Enter song rating 1-5: ");
 			// get desired song and rating
-			int rating = scanner.nextInt();
-			scanner.nextLine();
-			// handle out of range input
-			if (rating <= 0 || rating > 5) {
-				System.out.println("Invalid input: " + rating + "\n");
-				home();
-			}
-			// ratings can be 1-5
-			switch (rating) {
-			case 1:
-				// set enum to 1, rate song, print confirmation, go home
-				setRating = setRating.ONE;
-				lib.rateSong(song,setRating);
-				System.out.println(songTitle + " has been rated a " + rating);
-				home();
-				break;
+			if (scanner.hasNextInt()) {
+				int rating = scanner.nextInt();
+				scanner.nextLine();
+				if (rating <= 0 || rating > 5) {
+					System.out.println("Invalid input: " + rating + "\n");
+					home();
+				}
+				// ratings can be 1-5
+				switch (rating) {
+				case 1:
+					// set enum to 1, rate song, print confirmation, go home
+					setRating = setRating.ONE;
+					lib.rateSong(song,setRating);
+					System.out.println(songTitle + " has been rated a " + rating);
+					home();
+					break;
+				
+				case 2:
+					// set enum to 2, rate song, print confirmation, go home
+					setRating = setRating.TWO;
+					lib.rateSong(song,setRating);
+					System.out.println(songTitle + " has been rated a " + rating);
+					home();
+					break;
+				case 3:
+					// set enum to 3, rate song, print confirmation, go home
+					setRating = setRating.THREE;
+					lib.rateSong(song,setRating);
+					System.out.println(songTitle + " has been rated a " + rating);
+					home();
+					break;
+				case 4:
+					// set enum to 3, rate song, print confirmation, go home
+					setRating = setRating.FOUR;
+					lib.rateSong(song,setRating);
+					System.out.println(songTitle + " has been rated a " + rating);
+					home();
+					break;
+				case 5:
+					// set enum to 5, rate song, print confirmation, go home
+					setRating = setRating.FIVE;
+					lib.rateSong(song,setRating);
+					System.out.println(songTitle + " has been rated a " + rating);
+					System.out.println(songTitle + " has been added to favorites!");
+					home();
+					break;
+				}
+				// return enum
+				return setRating;
 			
-			case 2:
-				// set enum to 2, rate song, print confirmation, go home
-				setRating = setRating.TWO;
-				lib.rateSong(song,setRating);
-				System.out.println(songTitle + " has been rated a " + rating);
+			
+			} else {
+				System.out.println("Invalid input.");
 				home();
-				break;
-			case 3:
-				// set enum to 3, rate song, print confirmation, go home
-				setRating = setRating.THREE;
-				lib.rateSong(song,setRating);
-				System.out.println(songTitle + " has been rated a " + rating);
-				home();
-				break;
-			case 4:
-				// set enum to 3, rate song, print confirmation, go home
-				setRating = setRating.FOUR;
-				lib.rateSong(song,setRating);
-				System.out.println(songTitle + " has been rated a " + rating);
-				home();
-				break;
-			case 5:
-				// set enum to 5, rate song, print confirmation, go home
-				setRating = setRating.FIVE;
-				lib.rateSong(song,setRating);
-				System.out.println(songTitle + " has been rated a " + rating);
-				System.out.println(songTitle + " has been added to favorites!");
-				home();
-				break;
 			}
-			// return enum
-			return setRating;
-	}
+			return null;
+		}
+		
 		
 		// method to select a song
 		private static void selectSong(List<Song> songsList) {
 			// check if library is empty
 			libIsEmpty();
 			System.out.println("Select song from library: ");
-			int selectSongIndex = scanner.nextInt();
-			scanner.nextLine();
-			Song selectedSong = songsList.get(selectSongIndex);
+			try {
+				int selectSongIndex = scanner.nextInt();
+				scanner.nextLine();
+				selectSong(selectSongIndex, songsList);
+			} catch(Exception e) {
+	            System.out.println("Invalid input.");
+	            scanner.nextLine(); 
+	            selectSong(songsList); 
+	        }
+		}
+		
+		private static void selectSong(int index, List<Song> songsList) {
+			Song selectedSong = songsList.get(index);
 			// check if song is in library
 			if (!lib.getAllSongs().contains(selectedSong)) {
 			    System.out.println("Song not found in the library.");
