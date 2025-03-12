@@ -5,10 +5,12 @@
 package model;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import dataStructures.Album;
@@ -20,8 +22,11 @@ public class LibraryModel{
 	// instantiate variables
     private LinkedHashMap<Song, Rating> songs;
     private ArrayList<PlayList> playLists;
+    private PlayList recents;
+    private PlayList frequents;
     private ArrayList<Album> albums;
     private ArrayList<Song> favorites;
+    private ArrayList<Song> playedSongs;
     
     // enum to represent rating avoid primitive obsession
     public enum Rating {
@@ -34,16 +39,133 @@ public class LibraryModel{
         favorites = new ArrayList<Song>();
         albums = new ArrayList<Album>();  
         playLists = new ArrayList<PlayList>();
+        playedSongs = new ArrayList<Song>();
+        recents = new PlayList("Most recent songs: ");	// default playlists come with library
+        frequents = new PlayList("Most played songs: ");
+        playLists.add(recents);
+        playLists.add(frequents);
+        
     }
     
-    // copy constructor
-    public LibraryModel(LibraryModel otherLibrary) {
-        this.songs = otherLibrary.songs;
-        this.playLists = otherLibrary.playLists;
-        this.albums = otherLibrary.albums; 
-        this.favorites = otherLibrary.favorites;
+    public void removeSong(Song song) {
+    	songs.remove(song);
     }
     
+    public List<Song> sortByTitle() {
+    	List<Song> sort = new ArrayList<Song>();
+    	for (Song song: songs.keySet()) {
+    		sort.add(song);
+    	}
+    	Collections.sort(sort, Song.TitleComparator);
+    	return sort;
+    }
+    
+    public List<Song> sortByArtist() {
+    	List<Song> sort = new ArrayList<Song>();
+    	for (Song song: songs.keySet()) {
+    		sort.add(song);
+    	}
+    	Collections.sort(sort, Song.ArtistComparator);
+    	return sort;
+    }
+    
+    public List<Song> sortByRating() {
+    	ArrayList<Song> result = new ArrayList<Song>();
+    	HashMap<Song, Integer> songsCopy = new HashMap<Song, Integer>();
+    	for (Song song: songs.keySet()) {
+			switch (getRating(song)) {
+				case UNRATED:
+					continue;
+				case ONE:
+					songsCopy.put(song, 1);
+					break;
+				case TWO:
+					songsCopy.put(song, 2);
+					break;
+				case THREE:
+					songsCopy.put(song, 3);
+					break;
+				case FOUR:
+					songsCopy.put(song, 4);
+					break;
+				case FIVE:
+					songsCopy.put(song, 5);
+					break;
+	    		}
+    	}
+    	List<Map.Entry<Song, Integer>> sorted = bubbleSort(songsCopy);
+    	Collections.reverse(sorted);
+	    for (Map.Entry<Song, Integer> entry : sorted) {	// get the songs without count
+            result.add(entry.getKey());
+        }
+
+    	return result;
+    }
+    
+   
+    
+    public void playSong(Song song) {
+       playedSongs.add(song);
+       getMostFrequent();
+       ArrayList<Song> playedCopy = new ArrayList<Song>();
+       
+       for (int i = playedSongs.size() - 1; i >= 0; i-- ) {
+    	   playedCopy.add(playedSongs.get(i));
+       }
+       recents.clear();
+       if (playedSongs.size() < 10) {
+    	   for (int i = 0; i < playedSongs.size(); i++ ) {
+        	   recents.addSong(playedCopy.get(i));
+           }
+       } else {  
+    	   for (int i = 0; i < 10; i++ ) {
+    		   recents.addSong(playedCopy.get(i));
+    	   }  
+       }
+    }
+    
+    public void getMostFrequent() {
+    	
+    	HashMap<Song, Integer> countSongs = new HashMap<>();
+    	for (Song song : playedSongs) {
+    	    if (countSongs.containsKey(song)) { 
+    	        countSongs.put(song, countSongs.get(song) + 1);
+    	    } else { 
+    	        countSongs.put(song, 1);
+    	    }
+    	}
+        
+    	List<Map.Entry<Song, Integer>> sortCount = bubbleSort(countSongs).subList(0, Math.min(10, countSongs.size()));
+        ArrayList<Song> mostFrequent = new ArrayList<>();
+        for (Map.Entry<Song, Integer> entry : sortCount) {	// get the songs without count
+            mostFrequent.add(entry.getKey());
+        }
+
+        frequents.clear(); 
+        for (Song song : mostFrequent) {
+            frequents.addSong(song);
+        }
+
+    }
+
+   
+    public static List<Map.Entry<Song, Integer>> bubbleSort(HashMap<Song, Integer> map) {
+        List<Map.Entry<Song, Integer>> entryList = new ArrayList<>(map.entrySet());
+
+        for (int i = 0; i < entryList.size() - 1; i++) {
+            boolean swapped = false;  
+            for (int j = 0; j < entryList.size() - i - 1; j++) {
+                if (entryList.get(j).getValue() < entryList.get(j + 1).getValue()) {  
+                    Collections.swap(entryList, j, j + 1);
+                    swapped = true;
+                }
+            }
+            if (!swapped) break;
+        }
+        return entryList;
+    }
+
+       
     // get a list of all songs in library
     public List<Song> getAllSongs() {
         return new ArrayList<>(songs.keySet());
@@ -94,10 +216,10 @@ public class LibraryModel{
     	}
     }
     
-    // retrieve the rating of a song
     public Rating getRating(Song song) {
     	return songs.get(song);
     }
+
     
     // check if a song exists in the library depending on its title
     public boolean hasSongByTitle(String title) {
@@ -145,6 +267,7 @@ public class LibraryModel{
     
     // add a favorite to the favorites list
     public void addFavorite(Song song) {
+    	rateSong(song, Rating.FIVE);
     	favorites.add(song);
     }
 
@@ -260,4 +383,22 @@ public class LibraryModel{
     		}
     	} return albumsByArtist;
     }
+    
+    // get a list of songs within a playlist
+    public List<Song> getPlayList(PlayList playList) {
+    	System.out.println(playLists);
+    	List<Song> plSongs = new ArrayList<Song>();
+    	for (PlayList playList1: playLists) {
+    		// check each playlist in playlists 
+    		if (playList1.getName().equals(playList.getName())) {
+    			// if name matches return deep copy list of songs 
+    			// in playlist
+    			for (Song song : playList.getSongs()) {
+    				plSongs.add(song);
+    			}
+    			return plSongs;
+    		}
+    	} return null;
+    }
+    
 }
