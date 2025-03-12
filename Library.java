@@ -2,7 +2,7 @@
 // class to simulate library model object. Contains methods necessary for a Library.
 // libraries contain playLists, songs, albums, and favorite songs
 
-package LA1;
+package model;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -11,7 +11,11 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Set;
 
-class LibraryModel{
+import dataStructures.Album;
+import dataStructures.PlayList;
+import dataStructures.Song;
+
+public class LibraryModel{
 	
 	// instantiate variables
     private LinkedHashMap<Song, Rating> songs;
@@ -30,6 +34,14 @@ class LibraryModel{
         favorites = new ArrayList<Song>();
         albums = new ArrayList<Album>();  
         playLists = new ArrayList<PlayList>();
+    }
+    
+    // copy constructor
+    public LibraryModel(LibraryModel otherLibrary) {
+        this.songs = otherLibrary.songs;
+        this.playLists = otherLibrary.playLists;
+        this.albums = otherLibrary.albums; 
+        this.favorites = otherLibrary.favorites;
     }
     
     // get a list of all songs in library
@@ -248,21 +260,4 @@ class LibraryModel{
     		}
     	} return albumsByArtist;
     }
-    
-    // get a list of songs within a playlist
-    public List<Song> getPlayList(PlayList playList) {
-    	List<Song> plSongs = new ArrayList<Song>();
-    	for (PlayList playList1: playLists) {
-    		// check each playlist in playlists 
-    		if (playList1.getName().equals(playList.getName())) {
-    			// if name matches return deep copy list of songs 
-    			// in playlist
-    			for (Song song : playList.getSongs()) {
-    				plSongs.add(song);
-    			}
-    			return plSongs;
-    		}
-    	} return null;
-    }
-    
 }
