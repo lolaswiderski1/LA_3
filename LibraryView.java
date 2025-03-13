@@ -19,61 +19,12 @@ public class LibraryView {
 	    private static MusicStore musicStore = new MusicStore("albums");
 	    private static Scanner scanner = new Scanner(System.in);
 	    private static LibraryModel lib = new LibraryModel(); 
-//	    private static HashMap<String, String> logins = new HashMap<>();
-//		
+	    private static boolean isPlaying = false;
+	    private static Song songPlaying = new Song(null, null, null, null);		
 	    public static void main(String[] args) {
 			// call homepage
 			home();
 		}
-//		
-//	    public static void login() {
-//	        System.out.println("[0] Login: ");
-//	        System.out.println("[1] Create login: ");
-//	        
-//	        try {
-//	            int choice = scanner.nextInt(); 
-//	            scanner.nextLine(); 
-//	            handleLogin(choice);
-//	        } catch (Exception e) {
-//	            System.out.println("Invalid input."); 
-//	            scanner.nextLine(); 
-//	            login(); 
-//	        }
-//	    }
-//		
-//		public static void handleLogin(int choice) {
-//			switch (choice) {
-//			case 0:
-//				System.out.println("Enter username: ");
-//				String username = scanner.nextLine();
-//				if (logins.containsKey(username)) {
-//					System.out.println("Enter password: ");	
-//				    String password = scanner.nextLine();
-//					if (logins.get(username).equals(password)) {
-//						System.out.println("Login successful. \n");
-//						home();
-//					}else {
-//						System.out.println("Incorrect password. \n");
-//						login();
-//					}
-//				} else {
-//					System.out.println("Username not found.");
-//					login();
-//				}
-//			case 1:
-//				System.out.println("Create username: ");
-//				//scanner.nextLine();
-//				String newUsername = scanner.nextLine();
-//				System.out.println("Create password: ");
-//				//scanner.nextLine();
-//				String newPassword = scanner.nextLine();
-//				logins.put(newUsername, newPassword);
-//				System.out.println("Login created. ");
-//				login();
-//				
-//			}
-//						
-//		}
 		
 		public static void home() {
 			// home page for the program to jump back to after actions
@@ -91,7 +42,11 @@ public class LibraryView {
 			System.out.println("[9] - display a list of all playlists in your library");
 			System.out.println("[10] - display a list of all favorite songs");
 			System.out.println("[11] - create a playlist");
-			System.out.println("[12] - 	QUIT PROGRAM");
+			System.out.println("[12] - sort songs");
+			System.out.println("[13] - 	QUIT PROGRAM");
+			if (isPlaying) {
+				System.out.println("[14] - pause song: " + songPlaying.getSongTitle());
+			}
 			
 			// select choice
 			try {
@@ -157,10 +112,15 @@ public class LibraryView {
 					// create a playlist
 					createPlayList();
 					break;
-				case 12:	
+				case 12:
+					sortSongs();
+				case 13:	
 					// end the program
 					endProgram();
 					break;
+				case 14:
+					pauseSong();
+				
 				default:
 					// handle invalid output
 					System.out.println("Invalid input");
@@ -173,9 +133,70 @@ public class LibraryView {
 			System.exit(0);
 		}
 		
+		
+		public static void sortSongs() {
+			
+			System.out.println("[0] - sort songs by title");
+			System.out.println("[1] - sort songs by artist");
+			System.out.println("[2] - sort songs by rating");
+			System.out.println("[3] - home");
+			try {
+				int choice = scanner.nextInt();
+				scanner.nextLine();
+				switch (choice) {
+				case 0:
+					System.out.println("Songs sorted by title: \n");
+					displaySongs((lib.sortByTitle()));
+					home();
+					break;
+				case 1:
+					System.out.println("Songs sorted by artist: \n");
+					displaySongs((lib.sortByArtist()));
+					break;
+				case 2:
+					System.out.println("Songs sorted by rating: \n");
+					displaySongs((lib.sortByRating()));
+					home();
+					break;
+				case 3:
+					home();
+					break;
+				}
+				
+			}
+			catch(Exception e) {
+				System.out.println("Please enter number.");
+				sortSongs();
+			}
+		}
+		
+		
+		public static void pauseSong() {
+			System.out.println("Pause song?: " + songPlaying.getSongTitle() + "\n");
+			System.out.println("[0] - yes");
+			System.out.println("[1] - home");
+			try {
+				int choice = scanner.nextInt();
+				scanner.nextLine();
+				switch(choice) {
+				case 0:
+					System.out.println(songPlaying + " paused.");
+					isPlaying = false;
+					home();
+					break;	
+				case 1:
+					home();
+					break;
+				}
+			}
+			catch (Exception e) {
+				System.out.println("please enter number. \n");
+				pauseSong();
+			}
+		}
 		// creates playlist with entered name
 		private static void createPlayList() {
-			System.out.println("Enter name of playlist: ");
+			System.out.println("Create name of playlist: ");
 			String name = scanner.nextLine();
 			PlayList newPL = new PlayList(name);
 			lib.addPlaylist(newPL);
@@ -185,10 +206,12 @@ public class LibraryView {
 		
 		// Shows list of playlists and lets user select one.
 		private static void displayPlayLists() {
+			// Show default playlists
+			
 			List<PlayList> playLists = lib.getPlayLists();
 			for (int i = 0; i < playLists.size(); i++) {
 				// print numbered list of playlists
-				System.out.println("[" + i + "] " + playLists.get(i).getName()); 
+				System.out.println("[" + (i) + "] " + playLists.get(i).getName()); 
 			}
 			System.out.println("[" + playLists.size() + "] " + "Return Home\n");
 			// allow user to select playlist
@@ -202,7 +225,16 @@ public class LibraryView {
 			}
 			
 			PlayList selectedPlayList = playLists.get(choice);
-			playListChoices(selectedPlayList);
+			if (choice == 0) {	// default playlists
+				displayPlayList(selectedPlayList);
+				home();
+			}
+			if (choice == 1) {
+				displayPlayList(selectedPlayList);
+				home();
+			} else {
+				playListChoices(selectedPlayList);
+			}
 		}
 		
 		// user enters name and associated playlist is selected
@@ -221,6 +253,7 @@ public class LibraryView {
 		}
 		// allows user to add/remove a song from playlist
 		
+	
 		private static void playListChoices(PlayList playList) {
 			// method to handle removing and adding songs to a playlist
 			displayPlayList(playList);
@@ -232,7 +265,6 @@ public class LibraryView {
 			int choice = scanner.nextInt();
 			scanner.nextLine();
 			switch(choice) {
-			// act accordingly
 				case 0:
 					// add song
 					addSongToPlayList(playList);
@@ -429,8 +461,13 @@ public class LibraryView {
 		private static void displaySongs(List<Song> songs) {
 			// display the songs display a list of songs by index title and album
 			for (int i = 0; i < songs.size(); i++) {
-				System.out.println("[" + i + "] " + songs.get(i) + ", " + songs.get(i).getAlbumTitle());
+				if(lib.getRating(songs.get(i)) == Rating.UNRATED) {
+					System.out.println("[" + i + "] " + songs.get(i) + ", " + songs.get(i).getAlbumTitle());
+			}   else {
+				System.out.println("[" + i + "] " + songs.get(i) + ", " + songs.get(i).getAlbumTitle() + ", " + 
+			lib.getRating(songs.get(i)));
 			}
+		}
 		}
 		
 		// method to show albums
@@ -490,28 +527,32 @@ public class LibraryView {
 		}
 		
 		// gives users options after selecting song
-		private static int songOptions(Song song) {
+		private static int songOptions() {
 			// either go home, rate a song, or favorite a song
 			System.out.println("[0] - home");
 			System.out.println("[1] - rate song");
 			System.out.println("[2] - favorite song");
-			if (scanner.hasNextInt()) {
-				
+			System.out.println("[3] - play song");
+			System.out.println("[4] - remove song");
+			
+			
+			try{
 				int option = scanner.nextInt();
-	            scanner.nextLine(); 
+	            //scanner.nextLine(); 
 	            
-	            if (option < 0 || option > 2) {
+	            if (option < 0 || option > 4) {
 					System.out.println("Invalid input: " + option + "\n");
 					// return to homepage
 					home();
+				
+	            } else {        	         	       
+	           
+					return option;
+				
 				}
-	            
-	            return option;
-	        
-			} else {
+			} catch (Exception e) {
 	            System.out.println("Invalid input.");
-	            scanner.nextLine(); 
-	            home(); 
+	            songOptions(); 
 	        }
 			return 0;
 		}
@@ -562,6 +603,7 @@ public class LibraryView {
 					home();
 				}
 				// ratings can be 1-5
+				
 				switch (rating) {
 				case 1:
 					// set enum to 1, rate song, print confirmation, go home
@@ -619,17 +661,18 @@ public class LibraryView {
 			libIsEmpty();
 			System.out.println("Select song from library: ");
 			try {
+				
 				int selectSongIndex = scanner.nextInt();
-				scanner.nextLine();
 				selectSong(selectSongIndex, songsList);
+				
 			} catch(Exception e) {
 	            System.out.println("Invalid input.");
-	            scanner.nextLine(); 
-	            selectSong(songsList); 
+	            home(); 
 	        }
 		}
 		
 		private static void selectSong(int index, List<Song> songsList) {
+			
 			Song selectedSong = songsList.get(index);
 			// check if song is in library
 			if (!lib.getAllSongs().contains(selectedSong)) {
@@ -637,11 +680,12 @@ public class LibraryView {
 			    home();
 			    return;
 			}
-			switch(songOptions(selectedSong)) {
-			// perform on song accordingly (go home, rate, or favorite)
+			switch(songOptions()) {
+			// perform on song accordingly (go home, rate, favorite, play)
 				case 0:
 					// go home
 					home();
+					break;
 				case 1:
 					// use rate song methods
 					lib.rateSong(selectedSong, rateSong(selectedSong));
@@ -650,7 +694,23 @@ public class LibraryView {
 					// add to favorites list in lib model
 					lib.addFavorite(selectedSong);
 					System.out.println(selectedSong.getSongTitle() +" has been added to favorites!");
+					System.out.println(selectedSong.getSongTitle() + " has been rated a 5! ");
 					home();
+					break;
+				case 3:
+					for (int i = 0; i < 3; i++) {
+						System.out.println(selectedSong.getSongTitle() + " is playing...\n");
+					}	
+					lib.playSong(selectedSong);	
+					isPlaying = true;
+					songPlaying = selectedSong;
+					home();
+					break;
+				case 4:
+					lib.removeSong(selectedSong);
+					System.out.println(selectedSong + " has been removed from your library. \n");
+					home();
+					
 			}
 		}
 		
@@ -721,8 +781,14 @@ public class LibraryView {
 		    int i = 0;
 		    // print songs and ratings
 		    for (Song song : lib.getAllSongs()) {
+		    	if (lib.getRating(song) == Rating.UNRATED) {
+		    		System.out.println("[" + i + "] " + song.getSongTitle() + ", " + song.getArtist());
+		    		i++;
+		    	} else {
 		        System.out.println("[" + i + "] " + song.getSongTitle() + ", " + song.getArtist() + ", " + lib.getRating(song));
 		        i++;
+		    	}
+		        
 		    }
 		    home();
 		}
