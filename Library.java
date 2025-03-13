@@ -24,9 +24,11 @@ public class LibraryModel{
     private ArrayList<PlayList> playLists;
     private PlayList recents;
     private PlayList frequents;
+    private PlayList favoritesPlayList;
     private ArrayList<Album> albums;
     private ArrayList<Song> favorites;
     private ArrayList<Song> playedSongs;
+    private HashMap<String, List<Song>> genres;
     
     // enum to represent rating avoid primitive obsession
     public enum Rating {
@@ -40,11 +42,25 @@ public class LibraryModel{
         albums = new ArrayList<Album>();  
         playLists = new ArrayList<PlayList>();
         playedSongs = new ArrayList<Song>();
-        recents = new PlayList("Most recent songs: ");	// default playlists come with library
-        frequents = new PlayList("Most played songs: ");
+        recents = new PlayList("Most recent songs");	// default playlists come with library
+        frequents = new PlayList("Most played songs");
+        favoritesPlayList = new PlayList("Favorited songs");
         playLists.add(recents);
         playLists.add(frequents);
+        playLists.add(favoritesPlayList);
+        genres = new HashMap<>();
         
+    }
+    
+    public List<Song> shuffleSongs() {
+    	List<Song> songList = new ArrayList<>(songs.keySet());
+        Collections.shuffle(songList);
+        return songList;
+    }
+    
+    public List<PlayList> shufflePlaylists() {
+        Collections.shuffle(playLists);
+        return playLists;
     }
     
     public void removeSong(Song song) {
@@ -124,17 +140,23 @@ public class LibraryModel{
        }
     }
     
-    public void getMostFrequent() {
-    	
+    public HashMap<Song, Integer> countSongs(List<Song> songsList){
     	HashMap<Song, Integer> countSongs = new HashMap<>();
-    	for (Song song : playedSongs) {
+    	for (Song song : songsList) {
     	    if (countSongs.containsKey(song)) { 
     	        countSongs.put(song, countSongs.get(song) + 1);
     	    } else { 
     	        countSongs.put(song, 1);
     	    }
     	}
-        
+        return countSongs;
+    }
+    
+    
+    public void getMostFrequent() {
+    	
+    	HashMap<Song, Integer> countSongs = countSongs(playedSongs);
+    	
     	List<Map.Entry<Song, Integer>> sortCount = bubbleSort(countSongs).subList(0, Math.min(10, countSongs.size()));
         ArrayList<Song> mostFrequent = new ArrayList<>();
         for (Map.Entry<Song, Integer> entry : sortCount) {	// get the songs without count
@@ -176,10 +198,25 @@ public class LibraryModel{
     	return songs.containsKey(song);
     }
     
-    // add a song to the library
     public void addSong(Song song) {
+        
     	songs.put(song, Rating.UNRATED);
+        if (!genres.containsKey(song.getGenre())) {
+            genres.put(song.getGenre(), new ArrayList<>());
+        }
+        genres.get(song.getGenre()).add(song);
+        if (genres.get(song.getGenre()).size() == 10) {
+            PlayList genrePl = new PlayList(song.getGenre().toUpperCase());
+
+            for (Song s : genres.get(song.getGenre())) {
+                genrePl.addSong(s);
+            }
+            if (!playLists.contains(genrePl)) {  
+                playLists.add(genrePl);
+            }
+        }
     }
+        
     
     // check if an album is in the library
     public boolean hasAlbum(Album album) {
@@ -211,6 +248,7 @@ public class LibraryModel{
     			// if rating = 5, add to favorites
     			if (rating == Rating.FIVE) {	
         			favorites.add(song);
+        			favoritesPlayList.addSong(song);
     			}
     		}
     	}
@@ -268,7 +306,6 @@ public class LibraryModel{
     // add a favorite to the favorites list
     public void addFavorite(Song song) {
     	rateSong(song, Rating.FIVE);
-    	favorites.add(song);
     }
 
     // get a list of song titles
