@@ -1,6 +1,6 @@
 // Sam Hershey, Lola Swiderski
 // class to model a playlist of songs
-package LA1;
+package dataStructures;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -22,6 +22,11 @@ public class PlayList {
 	public PlayList(PlayList otherPlayList) {
 		this.name = otherPlayList.name;
 		this.songs = otherPlayList.songs;
+		
+	}
+	
+	public boolean isEmpty() {
+		return songs.size() == 0;
 	}
 	
 	// check if playlist contains a certain song
@@ -47,5 +52,9 @@ public class PlayList {
 	// get the list of songs from the playlist
 	public List<Song> getSongs() {
 		return new ArrayList<>(songs);
+	}
+	
+	public void clear() {
+		songs.clear();
 	}
 }
