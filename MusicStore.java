@@ -1,7 +1,7 @@
 // Sam Hershey, Lola Swiderski
 // class to simulate music store. It stores the songs and albums from a test file into
 // an array list making its data accesible. 
-package Model;
+package model;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -10,6 +10,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import dataStructures.Album;
+import dataStructures.Song;
 
 public class MusicStore {
 	private List<Album> albums = new ArrayList<>();
@@ -53,7 +56,7 @@ public class MusicStore {
             // rest of lines contains song titles to add to newAlbum
             String currSongTitle;
             while ((currSongTitle = br.readLine()) != null) {
-            	newAlbum.addSong(new Song(currSongTitle, artist, albumTitle));
+            	newAlbum.addSong(new Song(currSongTitle, artist, albumTitle, genre));
             }
             
             albums.add(newAlbum);
