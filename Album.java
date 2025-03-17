@@ -1,7 +1,7 @@
 // Sam Hershey, Lola Swiderski
 // class to simulate Album object. Albums contain artist, titles, genre, year, and songs
 
-package LA1;
+package dataStructures;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;

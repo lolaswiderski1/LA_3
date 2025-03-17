@@ -7,12 +7,12 @@ import dataStructures.Album;
 import dataStructures.Song;
 import model.LibraryModel;
 
-public class albumView extends LibraryView {
+public class AlbumView extends LibraryView {
 	
 	private static Scanner scanner = new Scanner(System.in);
 	private static LibraryModel lib;
 	
-	public albumView(LibraryModel lib) {
+	public AlbumView(LibraryModel lib) {
 		this.lib = lib;
 	}
 	
@@ -119,8 +119,6 @@ public class albumView extends LibraryView {
 		// jump home
 		mainHome();
 	}
-	
-			
-			
+		
 }
 	

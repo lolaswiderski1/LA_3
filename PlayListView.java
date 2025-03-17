@@ -7,12 +7,12 @@ import dataStructures.PlayList;
 import dataStructures.Song;
 import model.LibraryModel;
 
-public class playListView extends LibraryView {
+public class PlayListView extends LibraryView {
 	
 	private static Scanner scanner = new Scanner(System.in);
 	private static LibraryModel lib;
 	
-	public playListView(LibraryModel lib) {
+	public PlayListView(LibraryModel lib) {
 		this.lib = lib;
 	}
 	
@@ -66,6 +66,7 @@ public class playListView extends LibraryView {
 		String name = scanner.nextLine();
 		PlayList newPL = new PlayList(name);
 		lib.addPlaylist(newPL);
+		updateAccount();
 		System.out.println("PlayList created: " + name + "\n");
 		mainHome();
 		}
