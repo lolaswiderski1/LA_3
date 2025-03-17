@@ -20,7 +20,7 @@ import dataStructures.Song;
 public class LibraryModel{
 	
 	// instantiate variables
-    private LinkedHashMap<Song, Rating> songs;
+	private LinkedHashMap<Song, Rating> songs;
     private ArrayList<PlayList> playLists;
     private PlayList recents;
     private PlayList frequents;
@@ -30,6 +30,22 @@ public class LibraryModel{
     private ArrayList<Song> playedSongs;
     private HashMap<String, List<Song>> genres;
     
+    public String toString() {
+    	StringBuilder sb = new StringBuilder();
+        
+        sb.append("Songs: ").append(songs).append("\n");
+        sb.append("Playlists: ").append(playLists).append("\n");
+        sb.append("Recents Playlist: ").append(recents).append("\n");
+        sb.append("Frequents Playlist: ").append(frequents).append("\n");
+        sb.append("Favorites Playlist: ").append(favoritesPlayList).append("\n");
+        sb.append("Albums: ").append(albums).append("\n");
+        sb.append("Favorites: ").append(favorites).append("\n");
+        sb.append("Played Songs: ").append(playedSongs).append("\n");
+        sb.append("Genres: ").append(genres).append("\n");
+        
+        return sb.toString();
+    }
+    
     // enum to represent rating avoid primitive obsession
     public enum Rating {
     	UNRATED, ONE, TWO, THREE, FOUR, FIVE;
@@ -37,7 +53,7 @@ public class LibraryModel{
     
     // construct/initialize variables
     public LibraryModel() {
-        songs = new LinkedHashMap<Song, Rating>();
+    	songs = new LinkedHashMap<Song, Rating>();
         favorites = new ArrayList<Song>();
         albums = new ArrayList<Album>();  
         playLists = new ArrayList<PlayList>();
@@ -49,7 +65,19 @@ public class LibraryModel{
         playLists.add(frequents);
         playLists.add(favoritesPlayList);
         genres = new HashMap<>();
-        
+    }
+    
+    // copy constructor
+    public LibraryModel(LibraryModel other) {
+    	this.songs = other.songs;
+    	this.favorites = other.favorites;
+    	this.albums = other.albums;  
+    	this.playLists = other.playLists;
+    	this.playedSongs = other.playedSongs;
+    	this.recents = other.recents;
+    	this.frequents = other.frequents;
+    	this.favoritesPlayList = other.favoritesPlayList;
+    	this.genres = other.genres;
     }
     
     public List<Song> shuffleSongs() {
@@ -199,8 +227,8 @@ public class LibraryModel{
     }
     
     public void addSong(Song song) {
-        
     	songs.put(song, Rating.UNRATED);
+    	
         if (!genres.containsKey(song.getGenre())) {
             genres.put(song.getGenre(), new ArrayList<>());
         }
@@ -216,7 +244,6 @@ public class LibraryModel{
             }
         }
     }
-        
     
     // check if an album is in the library
     public boolean hasAlbum(Album album) {
@@ -240,18 +267,20 @@ public class LibraryModel{
     
     // rate a song in the library
     public void rateSong(Song song, Rating rating) {
-    	for (Song song1 : songs.keySet()) {
-    		// if song in songs matches song, set rating enum
-    		if (song1.getSongTitle().equals(song.getSongTitle()) &&
-    				song1.getArtist().equals(song.getArtist())) {
-    			songs.put(song, rating);
-    			// if rating = 5, add to favorites
-    			if (rating == Rating.FIVE) {	
-        			favorites.add(song);
-        			favoritesPlayList.addSong(song);
-    			}
-    		}
-    	}
+    	// Find the song in the map
+        for (Map.Entry<Song, Rating> entry : songs.entrySet()) {
+            Song song1 = entry.getKey();
+            // If the song matches, update its rating
+            if (song1.getSongTitle().equals(song.getSongTitle()) &&
+                song1.getArtist().equals(song.getArtist())) {
+                entry.setValue(rating);
+                // If rating is FIVE, add to favorites
+                if (rating == Rating.FIVE) {
+                    favorites.add(song);
+                }
+                break; // Exit the loop once the song is found and updated
+            }
+        }
     }
     
     public Rating getRating(Song song) {
@@ -306,8 +335,39 @@ public class LibraryModel{
     // add a favorite to the favorites list
     public void addFavorite(Song song) {
     	rateSong(song, Rating.FIVE);
+    	//favorites.add(song);
     }
-
+    
+    // get map of songs to ratings
+    public Map<Song, Rating> getSongsMap() {
+    	return songs;
+    }
+    
+    // get recents playlist
+    public PlayList getRecents() {
+    	return new PlayList(recents);
+    }
+    
+    // get frequents playlist
+    public PlayList getFrequents() {
+    	return new PlayList(frequents);
+    }
+    
+    // get favoritesPlayList playList
+    public PlayList getFavoritesPlayList() {
+		return new PlayList(favoritesPlayList);
+	}
+    
+    // get playedSongs
+    public List<Song> getPlayedSongs() {
+    	return new ArrayList<>(playedSongs);
+    }
+    
+    // get genres
+    public Map<String, List<Song>> getGenres() {
+    	return new HashMap<>(genres);
+    }
+    
     // get a list of song titles
     public List<String> getSongTitles() {
     	// add all song titles to string list
@@ -437,5 +497,16 @@ public class LibraryModel{
     		}
     	} return null;
     }
-    
+
+	public void setRecents(PlayList recents) {
+		this.recents = new PlayList(recents);
+	}
+
+	public void setFrequents(PlayList frequents) {
+		this.frequents = new PlayList(frequents);
+	}
+
+	public void setFavoritesPlayList(PlayList favoritesPlayList) {
+		this.favoritesPlayList = new PlayList(favoritesPlayList);
+	} 
 }
