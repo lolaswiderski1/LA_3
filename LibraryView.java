@@ -14,22 +14,99 @@ import dataStructures.PlayList;
 import dataStructures.Song;
 import model.LibraryModel;
 import model.MusicStore;
+import userManagement.AccountsManager;
 public class LibraryView {
 	// instantiate a music store, a scanner for the user, and a music library
 	    private static MusicStore musicStore = new MusicStore("albums");
 	    private static Scanner scanner = new Scanner(System.in);
 	    private static LibraryModel lib = new LibraryModel(); 	
-	    private static songsView songsView = new songsView(lib);
-	    private static playListView playListView = new playListView(lib);
-	    private static albumView albumView = new albumView(lib);
+	    private static SongsView songsView = new SongsView(lib);
+	    private static PlayListView playListView = new PlayListView(lib);
+	    private static AlbumView albumView = new AlbumView(lib);
+	    private static AccountsManager accountsManager = new AccountsManager("data");
+	    private static String username;
 	    public static void main(String[] args) {
-			// call homepage
-	    	mainHome();
+	    	logInMainDisplay();
 		}
+	    
+	    
+	    private static void logInMainDisplay() {
+	    	System.out.println("\nLog in or create an account.\n");
+	    	System.out.println("[0] - create a new account");
+	    	System.out.println("[1] - log in");
+	    	
+	    	// select choice
+	    	try {
+	    		int choice = scanner.nextInt();
+	    		scanner.nextLine(); 
+	    		logInOrCreateAccount(choice);
+	    	} catch(Exception e) {
+	    	    e.printStackTrace();
+	    	}
+	    }
+	    
+	    private static void logInOrCreateAccount(int choice) {
+	    	switch (choice) {
+	    	case 0:
+	    		createAccount();
+	    		break;
+	    	case 1:
+	    		logIn();
+	    		break;
+	    	default:
+	    		System.out.println("Invalid input." + choice);
+	    		logInMainDisplay();
+	    	}
+	    }
+	    
+	    private static void createAccount() {
+	    	System.out.println("\nCreate a new account.");
+	    	System.out.println("Enter username:");
+	    	String username = scanner.nextLine();
+	    	if (accountsManager.userExists(username)) {
+	    		System.out.println("Username already exists.");
+	    		logInMainDisplay();
+	    	} else {
+	    		LibraryView.username = username;
+	    		System.out.println("Enter password:");
+	    		String password = scanner.nextLine();
+	    		accountsManager.createAccount(username, password);
+	    	}
+	    	mainHome();
+	    }
+	    
+	    private static void logIn() {
+	    	System.out.println("\nLog in.");
+	    	System.out.println("Enter username:");
+	    	String username = scanner.nextLine();
+	    	if (!accountsManager.userExists(username)) {
+	    		System.out.println("Username not found.");
+	    		logInMainDisplay();
+	    	} else {
+	    		LibraryView.username = username;
+	    		System.out.println("Enter password:");
+	    		String password = scanner.nextLine();
+	    		if (!accountsManager.validatePassword(username, password)) {
+	    			System.out.println("Invalid password.");
+	    			logInMainDisplay();
+	    		} else {
+	    			// set lib to retrieved data
+	    			LibraryView.lib = accountsManager.getUserData(username);
+	    			
+	    		}
+	    	}
+	    	mainHome();
+	    }
 		
 		public static void mainHome() {
+			//System.out.println("size before: " + lib.getPlayLists().size());
+			songsView = new SongsView(lib);
+		    playListView = new PlayListView(lib);
+		    albumView = new AlbumView(lib);
+			//System.out.println(lib);
+		    System.out.println("size after: " + lib.getPlayLists().size());
 			// home page for the program to jump back to after actions
-			System.out.println("\nWelcome to your personal music library!\n");
+			System.out.println("\nWelcome to your personal music library " + username + "!\n");
 			// give initial options
 			System.out.println("[0] - shop music store");
 			System.out.println("[1] - open songs");
@@ -50,7 +127,9 @@ public class LibraryView {
 	        }
 	    }
 		
-		
+		protected static void updateAccount() {
+			accountsManager.updateAccount(username, lib);
+		}
 		
 		@SuppressWarnings("static-access")
 		private static void mainChoice(int choice) {
@@ -82,6 +161,7 @@ public class LibraryView {
 			
 		public static void endProgram() {
 			System.out.println("\n closing library!");
+			updateAccount();
 			System.exit(0);
 		}
 		
@@ -245,6 +325,7 @@ public class LibraryView {
 			
 			// add album to library
 			lib.addAlbum(selectedAlbum);
+			updateAccount();
 			System.out.println(selectedAlbum.getTitle() + " has been added to library. \n");
 		}
 
@@ -291,6 +372,7 @@ public class LibraryView {
 			}
 			// add song to library
 			lib.addSong(selectedSong);
+			updateAccount();
 			System.out.println(selectedSong + " has been added to library. \n");
 		}
 	    
