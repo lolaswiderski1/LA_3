@@ -12,6 +12,9 @@ public final class Song implements Comparable<Song>{
 	private String albumTitle;
 	private String genre;
 	
+	// Default constructor
+    public Song() { }
+	
 	// initialize variables
 	public Song(String songTitle, String artist, String albumTitle, String genre) {
 		this.songTitle = songTitle;
@@ -37,7 +40,7 @@ public final class Song implements Comparable<Song>{
 	
 	// print song
 	public String toString() {
-		return songTitle + ", " + artist;
+		return songTitle + ", " + artist + ", " + albumTitle + ", " + genre;
 	}
 	
 	public String getGenre() {
@@ -67,4 +70,3 @@ public final class Song implements Comparable<Song>{
 		return 0;
 	}
 }
-
