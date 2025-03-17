@@ -7,12 +7,12 @@ import dataStructures.Song;
 import model.LibraryModel;
 import model.LibraryModel.Rating;
 
-public class songsView extends LibraryView{
+public class SongsView extends LibraryView{
 	
 	private static Scanner scanner = new Scanner(System.in);
 	private static LibraryModel lib;
 	
-	public songsView(LibraryModel lib) {
+	public SongsView(LibraryModel lib) {
 		this.lib = lib;
 	}
 	
@@ -269,17 +269,21 @@ public class songsView extends LibraryView{
 					System.out.println(selectedSong.getSongTitle() + " is playing...\n");
 				}	
 				lib.playSong(selectedSong);	
+				updateAccount();
 				home();
 			case 1:
 				// add to favorites list in lib model
 				lib.addFavorite(selectedSong);
+				updateAccount();
 				System.out.println(selectedSong.getSongTitle() +" has been added to favorites!");
 				System.out.println(selectedSong.getSongTitle() + " has been rated a 5! \n");
 				home();
 			case 2:
 				lib.rateSong(selectedSong, rateSong(selectedSong));
+				updateAccount();
 			case 3:
 				lib.removeSong(selectedSong);
+				updateAccount();
 				System.out.println(selectedSong + " has been removed from your library. \n");
 				home();
 				
@@ -311,6 +315,7 @@ public class songsView extends LibraryView{
 					// set enum to 1, rate song, print confirmation, go home
 					setRating = setRating.ONE;
 					lib.rateSong(song,setRating);
+					updateAccount();
 					System.out.println(songTitle + " has been rated a " + rating + "\n");
 					home();
 					break;
@@ -319,6 +324,7 @@ public class songsView extends LibraryView{
 					// set enum to 2, rate song, print confirmation, go home
 					setRating = setRating.TWO;
 					lib.rateSong(song,setRating);
+					updateAccount();
 					System.out.println(songTitle + " has been rated a " + rating + "\n");
 					home();
 					break;
@@ -326,6 +332,7 @@ public class songsView extends LibraryView{
 					// set enum to 3, rate song, print confirmation, go home
 					setRating = setRating.THREE;
 					lib.rateSong(song,setRating);
+					updateAccount();
 					System.out.println(songTitle + " has been rated a " + rating + "\n");
 					home();
 					break;
@@ -333,6 +340,7 @@ public class songsView extends LibraryView{
 					// set enum to 3, rate song, print confirmation, go home
 					setRating = setRating.FOUR;
 					lib.rateSong(song,setRating);
+					updateAccount();
 					System.out.println(songTitle + " has been rated a " + rating + "\n");
 					home();
 					break;
@@ -340,6 +348,7 @@ public class songsView extends LibraryView{
 					// set enum to 5, rate song, print confirmation, go home
 					setRating = setRating.FIVE;
 					lib.rateSong(song,setRating);
+					updateAccount();
 					System.out.println(songTitle + " has been rated a " + rating);
 					System.out.println(songTitle + " has been added to favorites!\n");
 					home();
