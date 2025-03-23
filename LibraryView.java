@@ -308,25 +308,24 @@ public class LibraryView {
 			
 		}
 		protected static void albumChoice(int choice, List<Album> albums) {
-			// handle out of range exceptions
+			// handle out of range exception
 			if (choice < 0 || choice > albums.size()) {
 				System.out.println("Invalid input: " + choice + "\n");
 				mainHome();
 			}
 			// get desired album
 			Album selectedAlbum = albums.get(choice);
-			
 			// handle exception that albums is already in the library
 			if (lib.hasAlbum(selectedAlbum)) {
 				System.out.println("Album already exists in library. ");	
 				mainHome();
 				return;
+			} else {
+				// add album to library
+				lib.addAlbum(selectedAlbum);
+				updateAccount();
+				System.out.println(selectedAlbum.getTitle() + " has been added to library. \n");
 			}
-			
-			// add album to library
-			lib.addAlbum(selectedAlbum);
-			updateAccount();
-			System.out.println(selectedAlbum.getTitle() + " has been added to library. \n");
 		}
 
 		// method to show albums
