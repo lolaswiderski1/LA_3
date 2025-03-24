@@ -1,3 +1,4 @@
+
 package userManagement;
 
 import model.LibraryModel;
@@ -52,7 +53,6 @@ public class UserAccount {
                 while ((ch = reader.read()) != -1) {
                     jsonContent.append((char) ch);
                 }
-                //System.out.println("JSON Content: " + jsonContent.toString());
 
                 // Reset the reader
                 reader.close();
@@ -62,13 +62,12 @@ public class UserAccount {
                 jsonReader.setStrictness(Strictness.LENIENT); // Enable lenient mode
                 Type type = new TypeToken<LibraryModel>() {}.getType();
                 library = gson.fromJson(jsonReader, type);
-                System.out.println(library);
+                
+                // Initialize if file is empty
                 if (library == null) {
-                	System.out.println("lib = null");
-                    library = new LibraryModel(); // Initialize if file is empty
-                } else {
-                	System.out.println("lib not null");
-                }
+                	library = new LibraryModel(); 
+                }  
+            
             } catch (IOException e) {
                 e.printStackTrace();
             }
