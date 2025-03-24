@@ -51,7 +51,7 @@ public class UserDatabaseManager {
         try (FileWriter writer = new FileWriter(dataDirectory + "/user_database.json")) {
             gson.toJson(users, writer);
         } catch (IOException e) {
-            e.printStackTrace();
+            e.printStackTrace(); 
         }
     }
     public static String hashPassword(String password) {
