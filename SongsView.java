@@ -1,3 +1,4 @@
+
 package view;
 
 import java.util.List;
@@ -223,7 +224,6 @@ public class SongsView extends LibraryView{
 			libIsEmpty();
 		    int i = 0;
 		    // print songs and ratings
-		    System.out.println("lib.getAllSongs().size() = " + lib.getAllSongs().size());
 		    for (Song song : lib.getAllSongs()) {
 		    	if (lib.getRating(song) == Rating.UNRATED) {
 		    		System.out.println("[" + i + "] " + song.getSongTitle() + ", " + song.getArtist());
