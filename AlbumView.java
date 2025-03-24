@@ -1,3 +1,6 @@
+// Authors: Sam Hershey, Lola Swiderski
+// Description: AlbumView is the user interface for album data. It lets users interact
+// with the albums in their library
 
 package view;
 
@@ -5,11 +8,11 @@ import java.util.List;
 import java.util.Scanner;
 
 import dataStructures.Album;
-import dataStructures.Song;
 import model.LibraryModel;
 
 public class AlbumView extends LibraryView {
 	
+	// instantiate a scanner for user input and a library object
 	private static Scanner scanner = new Scanner(System.in);
 	private static LibraryModel lib;
 	
@@ -17,24 +20,31 @@ public class AlbumView extends LibraryView {
 		this.lib = lib;
 	}
 	
+	// the homepage for albumview allows users to open albums, search for albums, or 
+	// return to the main library homepage
 	public static void home() {
+		// print the users options
 		System.out.println("[0] - open the albums in your library");
 		System.out.println("[1] - search for albums in your library");
 		System.out.println("[2] - return to homepage");
-		
+		// Handle edge cases. If a non integer input is entered, catch
+		// the exception, and display and error message
 		try {
             int choice = scanner.nextInt();
             scanner.nextLine(); 
             mainChoice(choice);
         } catch(Exception e) {
+        	// print error message
             System.out.println("enter number. \n");
             scanner.nextLine(); 
             home(); 
         }
 	}
 	
+	// diect the users input to the correct functionality
 	public static void mainChoice(int choice) {
-		switch(choice) {
+		// three main choices for albums (display, search, and home)
+		switch(choice) {  
 		case 0:
 			displayAlbumsInLib();
 			break;
@@ -48,9 +58,13 @@ public class AlbumView extends LibraryView {
 		
 	}	
 	
+	// searchAlbums gives the user the options to search for an album by a title
+	// or by an artist
 	private static void searchAlbums() {
+		// print out options
 		System.out.println("[0] - search for albums by title");
 		System.out.println("[1] - search for albums by artist");
+		// direct the user to the correct search functionality
 		try {
             int choice = scanner.nextInt();
             scanner.nextLine(); 
@@ -61,8 +75,9 @@ public class AlbumView extends LibraryView {
             	albumByArtist();
             case 2:
             	home();
-            }        
+            }     
         } catch(Exception e) {
+        	// catch edge cases
             System.out.println("enter number. \n");
             scanner.nextLine(); 
             home(); 
@@ -70,45 +85,37 @@ public class AlbumView extends LibraryView {
 		
 	}
 	
-	// display albums in library
+	// displayAlbumsInLib displays the albums in the library
 	private static void displayAlbumsInLib() {
-		// check if library empty
-		//libIsEmpty();
-		// print albums
+		// print out the albums index and the songs inside of it
 		for (int i = 0; i < lib.getAlbums().size();i++) {
 			System.out.println("[" + i + "]" + " " + lib.getAlbums().get(i));
-			//System.out.println("["+ i + "]" + " " + lib.getAlbums().get(i).getTitle() + ", " +
-		//lib.getAlbums().get(i).getArtist() + ", " + lib.getAlbums().get(i).getGenre() + ", " +
-		//			lib.getAlbums().get(i).getYear());
 		}
-		// go home
 		mainHome();
 	}
-	// get albums by artist 
+	
+	// albumByArtist gets every album by an artist 
 	private static void albumByArtist() {
-		// check if library is empty
-		//libIsEmpty();
 		System.out.println("Enter album artist: \n");
 		String artist = scanner.nextLine();
-		// handle artist not being in library
+		// handle the edge case that an artist is not in library
 		if (!lib.hasAlbumByArtist(artist)) {
 			System.out.println("Can not find artist in library.");
 			mainHome();
 			return;
 		}
-		// get songslist using library model method
+		// get the albumByArtist list using library model method
 		List<Album> songsList = lib.getAlbumsByArtist(artist);
 		// display the albums
 		displayAlbums(songsList);
 		// go home
 		mainHome();
 	}
-	// get albums by title
+	
+	// albumByTitle gets the albums with a certain title
 	private static void albumByTitle() {
-		//libIsEmpty();
 		System.out.println("Enter album title: \n");
 		String title = scanner.nextLine();
-		// check if lib empty
 		// handle exceptions
 		if (!lib.hasAlbumByTitle(title)) {
 			System.out.println("Can not find album in library.");
