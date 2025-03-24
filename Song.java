@@ -13,7 +13,7 @@ public final class Song implements Comparable<Song>{
 	private String albumTitle;
 	private String genre;
 	
-	// Default constructor
+	// default constructor
     public Song() { }
 	
 	// initialize variables
@@ -25,7 +25,7 @@ public final class Song implements Comparable<Song>{
 	}
 	
 	// get song title
-	public String getSongTitle() {
+	public String getSongTitle() { 
 		return songTitle;
 	}
 	
@@ -49,7 +49,7 @@ public final class Song implements Comparable<Song>{
 		
 	}
 	
-	// Comparator for sorting by title
+	// comparator for sorting by title
     public static Comparator<Song> TitleComparator = new Comparator<Song>() {
         @Override
         public int compare(Song song, Song other) {
@@ -57,7 +57,7 @@ public final class Song implements Comparable<Song>{
         }
     };
 
-    // Comparator for sorting by artist
+    // comparator for sorting by artist
     public static Comparator<Song> ArtistComparator = new Comparator<Song>() {
         @Override
         public int compare(Song song, Song other) {
@@ -67,7 +67,6 @@ public final class Song implements Comparable<Song>{
     
 	@Override
 	public int compareTo(Song o) {
-		// TODO Auto-generated method stub
 		return 0;
 	}
 	
@@ -78,9 +77,9 @@ public final class Song implements Comparable<Song>{
 	    	return false; 
 	    }
 
-	    Song song = (Song) obj; // Cast to Song
+	    Song song = (Song) obj; // cast to Song
 
-	    // Compare all relevant fields
+	    // compare all relevant fields
 	    return songTitle.equals(song.songTitle) &&
 	           artist.equals(song.artist) &&
 	           albumTitle.equals(song.albumTitle) &&
