@@ -9,23 +9,25 @@ import java.util.List;
 import java.util.Map;
 
 public class PlayList {
+	
 	// instantiate playlist name and songs list
 	private String name;
 	private ArrayList<Song> songs;
 	
-	// inialize variables
+	// initialize variables
 	public PlayList(String name) {
 		this.name = name;
 		songs = new ArrayList<Song>();
 	}
 
-	// Copy constructor for encapsulation
+	// copy constructor for encapsulation
 	public PlayList(PlayList otherPlayList) {
 		this.name = otherPlayList.name;
-		this.songs = otherPlayList.songs;
+		this.songs = otherPlayList.songs; 
 		
 	}
 	
+	// check if a playlist is empty
 	public boolean isEmpty() {
 		return songs.size() == 0;
 	}
@@ -55,6 +57,7 @@ public class PlayList {
 		return new ArrayList<>(songs);
 	}
 	
+	// clear the playlist
 	public void clear() {
 		songs.clear();
 	}
