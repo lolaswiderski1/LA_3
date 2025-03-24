@@ -68,15 +68,17 @@ public class AlbumView extends LibraryView {
         }
 		
 	}
+	
 	// display albums in library
 	private static void displayAlbumsInLib() {
 		// check if library empty
 		//libIsEmpty();
 		// print albums
 		for (int i = 0; i < lib.getAlbums().size();i++) {
-			System.out.println("["+ i + "]" + " " + lib.getAlbums().get(i).getTitle() + ", " +
-		lib.getAlbums().get(i).getArtist() + ", " + lib.getAlbums().get(i).getGenre() + ", " +
-					lib.getAlbums().get(i).getYear());
+			System.out.println("[" + i + "]" + " " + lib.getAlbums().get(i));
+			//System.out.println("["+ i + "]" + " " + lib.getAlbums().get(i).getTitle() + ", " +
+		//lib.getAlbums().get(i).getArtist() + ", " + lib.getAlbums().get(i).getGenre() + ", " +
+		//			lib.getAlbums().get(i).getYear());
 		}
 		// go home
 		mainHome();
@@ -118,7 +120,6 @@ public class AlbumView extends LibraryView {
 		displayAlbums(songsList);
 		// jump home
 		mainHome();
-	}
-		
+	}		
 }
 	
