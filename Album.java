@@ -94,4 +94,43 @@ public class Album {
 		}
 		return result;
 	}
+	
+	@Override
+	public boolean equals(Object obj) {
+	    if (this == obj) return true;
+	    // Check if obj is null or of a different class
+	    if (obj == null || getClass() != obj.getClass()) return false; 
+
+	    Album otherAlbum = (Album) obj; // Cast obj to Album
+	    
+	    // Check if the two albums have the same number of songs
+	    if (songs.size() != otherAlbum.songs.size()) return false;
+	    
+	    // Create a set of song titles from this album
+	    java.util.Set<String> thisSongTitles = new java.util.HashSet<>();
+	    for (Song song : songs) {
+	        thisSongTitles.add(song.getSongTitle().toLowerCase());
+	    }
+	    
+	    // Check if all songs in the other album are in this album
+	    for (Song song : otherAlbum.songs) {
+	        if (!thisSongTitles.contains(song.getSongTitle().toLowerCase())) {
+	            return false;
+	        }
+	    }
+
+	    return true; // If all songs match, the albums are equal
+	}
+
+	@Override
+	public int hashCode() {
+	    // Use a set to compute the hash code, since the order of songs doesn't matter
+	    java.util.Set<String> songTitles = new java.util.HashSet<>();
+	    for (Song song : songs) {
+	        songTitles.add(song.getSongTitle().toLowerCase()); // Use lowercase for consistency
+	    }
+
+	    // Compute the hash code based on the set of song titles
+	    return songTitles.hashCode();
+	}
 }
