@@ -1,3 +1,4 @@
+
 // Sam Hershey, Lola Swiderski
 // class to model a playlist of songs
 package dataStructures;
