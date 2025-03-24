@@ -1,4 +1,4 @@
-package Model;
+package test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -10,14 +10,19 @@ import java.util.Set;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
+import dataStructures.Album;
+import dataStructures.PlayList;
+import dataStructures.Song;
+import model.LibraryModel;
+
 class LibraryModelTest {
 	LibraryModel lib = new LibraryModel();
-	Song song1 = new Song("songTitle1", "artist1", "albumTitle1");
-	Song song2 = new Song("songTitle2", "artist1", "albumTitle1");
+	Song song1 = new Song("songTitle1", "artist1", "albumTitle1", "genre");
+	Song song2 = new Song("songTitle2", "artist1", "albumTitle1", "genre");
 	Album album1 = new Album("albumTitle1", "artist1", "genre1", "year1");
 	
-	Song song3 = new Song("songTitle1", "artist2", "albumTitle2");
-	Song song4 = new Song("songTitle3", "artist2", "albumTitle2");
+	Song song3 = new Song("songTitle1", "artist2", "albumTitle2", "genre");
+	Song song4 = new Song("songTitle3", "artist2", "albumTitle2", "genre");
 	Album album2 = new Album("albumTitle2", "artist2", "genre2", "year2");
 	
 	PlayList playList1 = new PlayList("pl1");
