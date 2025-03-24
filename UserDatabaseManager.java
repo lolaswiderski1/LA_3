@@ -5,6 +5,10 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.reflect.Type;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
 import com.google.gson.Gson;
@@ -12,6 +16,7 @@ import com.google.gson.reflect.TypeToken;
 
 public class UserDatabaseManager {
     private String dataDirectory;
+    public static String passWord;
     private Map<String, String> users = new HashMap<>(); // maps usernames to passwords
     Gson gson = new Gson();
 
@@ -48,16 +53,36 @@ public class UserDatabaseManager {
             e.printStackTrace();
         }
     }
+    public static String hashPassword(String password) {
+        try {
+            // Derive a "deterministic salt" from the password itself
+            MessageDigest saltMd = MessageDigest.getInstance("SHA-256");
+            byte[] salt = saltMd.digest(password.getBytes()); // Salt is derived from password
+
+            // Hash the password using SHA-256
+            MessageDigest md = MessageDigest.getInstance("SHA-256");
+            md.update(salt);
+            byte[] hashedPassword = md.digest(password.getBytes());
+
+            // Encode salt and hash separately in Base64
+            String saltString = Base64.getEncoder().encodeToString(salt);
+            String hashString = Base64.getEncoder().encodeToString(hashedPassword);
+
+            // Return the salt and hash separated by ":"
+            return saltString + ":" + hashString;
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException("Error hashing password", e);
+        }
+    }
 
     public void addUser(String username, String password) {
-    	// TODO: hash + salt password
-        users.put(username, password);
+        users.put(username, hashPassword(password));
         saveDatabase();
     }
     
     public boolean validatePassword(String username, String password) {
     	// TODO: unhash + unsalt password
-    	return users.get(username).equals(password);
+    	return users.get(username).equals(hashPassword(password));
     }
 
     public boolean userExists(String username) {
