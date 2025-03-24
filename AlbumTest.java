@@ -1,4 +1,4 @@
-package Model;
+package test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -7,13 +7,16 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
+import dataStructures.Album;
+import dataStructures.Song;
+
 class AlbumTest {
 	
 	private Album album = new Album("albumTitle", "artist", "genre", "year");
 
 	@Test
 	void testGetSongs() {
-		Song song = new Song("songTitle", "artist", "albumTitle");
+		Song song = new Song("songTitle", "artist", "albumTitle", "genre");
 		album.addSong(song);
 		List<Song> songs = album.getAllSongs();
 		
@@ -45,9 +48,9 @@ class AlbumTest {
 	
 	@Test
 	void testAddSong() {
-		Song song = new Song("songTitle", "artist", "albumTitle");
-		Song song1 = new Song("song1Title", "artist1", "albumTitle");
-		Song song2 = new Song("song2Title", "artist2", "albumTitle");
+		Song song = new Song("songTitle", "artist", "albumTitle","genre");
+		Song song1 = new Song("song1Title", "artist1", "albumTitle","genre");
+		Song song2 = new Song("song2Title", "artist2", "albumTitle","genre");
 		album.addSong(song);
 		album.addSong(song1);
 		album.addSong(song2);
@@ -61,7 +64,7 @@ class AlbumTest {
 	
 	@Test
 	void testGetSongByTitle() {
-		Song song = new Song("songTitle", "artist", "albumTitle");
+		Song song = new Song("songTitle", "artist", "albumTitle","genre");
 		album.addSong(song);
 		
 		Song testSong = album.getSongByTitle("songTitle");
@@ -77,7 +80,7 @@ class AlbumTest {
 	
 	@Test
 	void testHasSong() {
-		Song song = new Song("songTitle", "artist", "albumTitle");
+		Song song = new Song("songTitle", "artist", "albumTitle","genre");
 		album.addSong(song);
 		
 		assertTrue(album.hasSong("songTitle"));
@@ -85,8 +88,8 @@ class AlbumTest {
 	
 	@Test
 	void testToString() {
-		Song song = new Song("songTitle", "artist", "albumTitle");
-		Song song1 = new Song("song1Title", "artist1", "albumTitle");
+		Song song = new Song("songTitle", "artist", "albumTitle", "genre");
+		Song song1 = new Song("song1Title", "artist1", "albumTitle", "genre");
 		
 		album.addSong(song);
 		album.addSong(song1);
@@ -97,9 +100,9 @@ class AlbumTest {
 	
 	@Test
 	void testCopyConstructor() {
-		Song song = new Song("songTitle", "artist", "albumTitle");
-		Song song1 = new Song("song1Title", "artist1", "albumTitle");
-		Song song2 = new Song("song2Title", "artist2", "albumTitle");
+		Song song = new Song("songTitle", "artist", "albumTitle" ,"genre");
+		Song song1 = new Song("song1Title", "artist1", "albumTitle" ,"genre");
+		Song song2 = new Song("song2Title", "artist2", "albumTitle" ,"genre");
 		album.addSong(song);
 		album.addSong(song1);
 		album.addSong(song2);
