@@ -1,5 +1,5 @@
-// Sam Hershey, Lola Swiderski
-// class for the user to use the music library 
+// Authors:
+// Descriptionclass for the user to use the music library 
 package view;
 
 import java.util.ArrayList;
@@ -16,9 +16,10 @@ import dataStructures.Song;
 import model.LibraryModel;
 import model.MusicStore;
 import userManagement.AccountsManager;
-public class LibraryView {
+public class LibraryView { 
 	// instantiate a music store, a scanner for the user, and a music library
 	    protected static MusicStore musicStore = new MusicStore("albums");
+	    
 	    private static Scanner scanner = new Scanner(System.in);
 	    private static LibraryModel lib = new LibraryModel(); 	
 	    private static SongsView songsView = new SongsView(lib);
@@ -29,8 +30,8 @@ public class LibraryView {
 	    
 	    public static void main(String[] args) {
 	    	logInMainDisplay();
-		}
-	    
+		} 
+	     
 	    
 	    private static void logInMainDisplay() {
 	    	System.out.println("\nLog in or create an account.\n");
@@ -93,12 +94,11 @@ public class LibraryView {
 	    			logInMainDisplay();
 	    		} else {
 	    			// set lib to retrieved data
-	    			System.out.println("	lib.getAllSongs().size() = " + lib.getAllSongs().size());
 	    			LibraryView.lib = accountsManager.getUserData(username);
+	    			System.out.println(lib.getAllSongs().size());
 	    			
 	    		}
 	    	}
-	    	System.out.println("	lib.getAllSongs().size() = " + lib.getAllSongs().size());
 	    	//updateAccount();
 	    	mainHome();
 	    }
@@ -371,7 +371,6 @@ public class LibraryView {
 			// find desired song
 			Song selectedSong = songs.get(i);
 			// handle exceptions
-			System.out.println(lib.hasSong(selectedSong));
 			if (lib.hasSong(selectedSong)) {
 				System.out.println("Song already exists in library. ");	
 				mainHome();
