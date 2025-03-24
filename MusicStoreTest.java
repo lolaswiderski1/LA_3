@@ -1,10 +1,14 @@
-package Model;
+package test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
+
+import dataStructures.Album;
+import dataStructures.Song;
+import model.MusicStore;
 
 class MusicStoreTest {
 	
