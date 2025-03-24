@@ -17,6 +17,7 @@ public class PlayListView extends LibraryView {
 	}
 	
 	public static void home() {
+		System.out.println(lib.getPlayLists());
 		System.out.println("[0] - create a playlist");
 		System.out.println("[1] - open the playlists in your library");
 		System.out.println("[2] - search for a playlist in your library");
@@ -27,7 +28,7 @@ public class PlayListView extends LibraryView {
             int choice = scanner.nextInt();
             scanner.nextLine(); 
             mainChoice(choice);
-        } catch(Exception e) {
+        } catch(Exception e) { 
             System.out.println("enter number. \n");
             scanner.nextLine(); 
             home(); 
@@ -69,7 +70,7 @@ public class PlayListView extends LibraryView {
 		updateAccount();
 		System.out.println("PlayList created: " + name + "\n");
 		mainHome();
-		}
+	}
 	
 
 	// Shows a list of playlists and lets user select one.
@@ -89,13 +90,18 @@ public class PlayListView extends LibraryView {
 			mainHome();
 			return;
 		}
-		
-		PlayList selectedPlayList = playLists.get(choice);
-		if (playLists.get(choice).getName() == "Most recent songs" || playLists.get(choice).getName() == "Most played songs"
-				|| playLists.get(choice).getName() == "Favorited songs") {	// default playlists
-			displayPlayList(selectedPlayList);
+		switch (choice) {
+		case 0: 
+			displayPlayList(lib.recents);
 			home();
-		} else {
+		case 1:
+			displayPlayList(lib.frequents);
+			home();
+		case 2:
+			displayPlayList(lib.favoritesPlayList);
+			home();
+		default:	
+			PlayList selectedPlayList = playLists.get(choice);
 			playListChoices(selectedPlayList);
 		}
 	}
@@ -176,6 +182,7 @@ public class PlayListView extends LibraryView {
 			System.out.println("     " + song.getSongTitle());
 		}
 	}
+	
 	// user selects a song in playlist to remove
 	private static void removeSongFromPlayList(PlayList playList) {
 		// method to remove a song from a playlist
