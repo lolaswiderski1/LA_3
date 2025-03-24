@@ -1,3 +1,4 @@
+
 // Sam Hershey, Lola Swiderski
 // class to model a song object
 package dataStructures;
@@ -72,8 +73,10 @@ public final class Song implements Comparable<Song>{
 	
 	@Override
 	public boolean equals(Object obj) {
-	    if (this == obj) return true; // Check for reference equality
-	    if (obj == null || getClass() != obj.getClass()) return false; // Check for null and class type
+	    if (this == obj) return true; 
+	    if (obj == null || getClass() != obj.getClass()) {
+	    	return false; 
+	    }
 
 	    Song song = (Song) obj; // Cast to Song
 
