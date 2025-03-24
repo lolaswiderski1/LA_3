@@ -12,7 +12,7 @@ import model.MusicStore;
 
 class MusicStoreTest {
 	
-	MusicStore store = new MusicStore("test_albums");
+	MusicStore store = new MusicStore("albums");
 
 	@Test
 	void testGetSongsByTitle() {
@@ -49,7 +49,7 @@ class MusicStoreTest {
 	@Test
 	void testGetAlbums() {
 		List<Album> albums = store.getAlbums();
-		assertEquals(3, albums.size());
+		assertEquals(15, albums.size());
 		
 		for (Album album : albums) {
 	        assertNotNull(album.getTitle());
