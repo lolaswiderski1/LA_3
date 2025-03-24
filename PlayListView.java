@@ -1,3 +1,4 @@
+
 package view;
 
 import java.util.List;
@@ -27,7 +28,7 @@ public class PlayListView extends LibraryView {
 		try {
             int choice = scanner.nextInt();
             scanner.nextLine(); 
-            mainChoice(choice);
+            mainChoice(choice); 
         } catch(Exception e) { 
             System.out.println("enter number. \n");
             scanner.nextLine(); 
@@ -35,7 +36,7 @@ public class PlayListView extends LibraryView {
         }
 	}
 	
-	public static void mainChoice(int choice) {
+	public static void mainChoice(int choice) { 
 		switch(choice) {
 		case 0:
 			createPlayList();
@@ -92,13 +93,13 @@ public class PlayListView extends LibraryView {
 		}
 		switch (choice) {
 		case 0: 
-			displayPlayList(lib.recents);
+			displayPlayList(lib.getRecents());
 			home();
 		case 1:
-			displayPlayList(lib.frequents);
+			displayPlayList(lib.getFrequents());
 			home();
 		case 2:
-			displayPlayList(lib.favoritesPlayList);
+			displayPlayList(lib.getFavoritesPlayList());
 			home();
 		default:	
 			PlayList selectedPlayList = playLists.get(choice);
