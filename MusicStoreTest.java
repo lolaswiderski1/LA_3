@@ -1,4 +1,4 @@
-package test;
+package tests;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -13,6 +13,11 @@ import model.MusicStore;
 class MusicStoreTest {
 	
 	MusicStore store = new MusicStore("albums");
+	
+	@Test
+	void testWrongDirectory() {
+		MusicStore newStore = new MusicStore("fake_directory");
+	}
 
 	@Test
 	void testGetSongsByTitle() {
