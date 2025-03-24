@@ -1,3 +1,4 @@
+
 package model;
 
 import com.google.gson.*;
@@ -74,7 +75,6 @@ public class LibraryModelSerializer implements JsonSerializer<LibraryModel>, Jso
             LibraryModel.Rating rating = jDsContext.deserialize(entry.getValue(), LibraryModel.Rating.class);
             library.addSong(song);
             library.rateSong(song, rating);
-            System.out.println("s - library.getAllSongs().size() = " + library.getAllSongs().size());
         }
         
         // Deserialize recents
@@ -96,13 +96,7 @@ public class LibraryModelSerializer implements JsonSerializer<LibraryModel>, Jso
             if (!library.hasPlaylist(playList.getName())) {
             	library.addPlaylist(playList);
             }
-            /*
-            if (!playList.getName().equals("Most recent songs") && 
-            		!playList.getName().equals("Most played songs") && 
-            		!playList.getName().equals("Favorited songs")) {
-            	library.addPlaylist(playList);
-            };
-            */
+     
         }
 
         // Deserialize albums
@@ -110,7 +104,6 @@ public class LibraryModelSerializer implements JsonSerializer<LibraryModel>, Jso
         for (JsonElement element : albumsArray) {
             Album album = jDsContext.deserialize(element, Album.class);
             library.addAlbum(album);
-            System.out.println("a - library.getAllSongs().size() = " + library.getAllSongs().size());
         }
         
         // Deserialize favorites
