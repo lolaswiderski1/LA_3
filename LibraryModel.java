@@ -146,8 +146,6 @@ public class LibraryModel{
     	return result;
     }
     
-   
-    
     public void playSong(Song song) {
        playedSongs.add(song);
        getMostFrequent();
@@ -179,8 +177,7 @@ public class LibraryModel{
     	}
         return countSongs;
     }
-    
-    
+     
     public void getMostFrequent() {
     	
     	HashMap<Song, Integer> countSongs = countSongs(playedSongs);
@@ -197,7 +194,6 @@ public class LibraryModel{
         }
 
     }
-
    
     public static List<Map.Entry<Song, Integer>> bubbleSort(HashMap<Song, Integer> map) {
         List<Map.Entry<Song, Integer>> entryList = new ArrayList<>(map.entrySet());
@@ -214,8 +210,7 @@ public class LibraryModel{
         }
         return entryList;
     }
-
-       
+     
     // get a list of all songs in library
     public List<Song> getAllSongs() {
         return new ArrayList<>(songs.keySet());
@@ -246,18 +241,58 @@ public class LibraryModel{
     }
     
     // check if an album is in the library
-    public boolean hasAlbum(Album album) {
-    	return albums.contains(album);
+    // returns true if album exists in library with all matching songs,
+    // false otherwise
+    public boolean hasAlbum(Album newAlbum) {
+    	return hasAlbumByTitle(newAlbum.getTitle());
+    	/*
+    	boolean contains = hasAlbumByTitle(newAlbum.getTitle());
+    	
+    	if (!contains) return false; // no album with this title exists
+    	
+    	List<Album> albums = getAlbumsByTitle(newAlbum.getTitle());
+    	Album album = albums.get(0);
+    	return album.equals(newAlbum);
+    	*/
     }
     
-    // add an album to the library
-    public void addAlbum(Album album) {
-    	albums.add(album);
-    	for (Song song : album.getAllSongs()) {
+    public void addSongsToAlbum(String albumTitle, List<Song> songs) {
+    	List<Album> albums = getAlbumsByTitle(albumTitle);
+    	Album album = albums.remove(0); // get and remove album with matching title
+    	for (Song song : songs) {
+    		// add each song to album if it wasn't already there
+    		if (!album.hasSong(song.getSongTitle())) {
+    			album.addSong(song);
+    		}
+    		
+    		// add each song to songs if it wasn't already there
     		if (!hasSong(song)) {
     			addSong(song);
     		}
     	}
+    	// re-add album with the new songs
+    	albums.add(album);
+    }
+    
+    // add an album to the library
+    public void addAlbum(Album newAlbum) {
+    	albums.add(new Album(newAlbum));
+    	
+    	// add any new songs to songs
+    	for (Song song : newAlbum.getAllSongs()) {
+    		if (!hasSong(song)) {
+    			addSong(song);
+    		}
+    	}
+    }
+    
+    public boolean hasPlaylist(String playListName) {
+    	for (PlayList pl : playLists) {
+    		if (pl.getName().equals(playListName)) {
+    			return true;
+    		}
+    	}
+    	return false;
     }
     
     // add a playlist to the library
@@ -287,7 +322,6 @@ public class LibraryModel{
     	return songs.get(song);
     }
 
-    
     // check if a song exists in the library depending on its title
     public boolean hasSongByTitle(String title) {
     	boolean result = false;

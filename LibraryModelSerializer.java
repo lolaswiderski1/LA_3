@@ -74,19 +74,9 @@ public class LibraryModelSerializer implements JsonSerializer<LibraryModel>, Jso
             LibraryModel.Rating rating = jDsContext.deserialize(entry.getValue(), LibraryModel.Rating.class);
             library.addSong(song);
             library.rateSong(song, rating);
+            System.out.println("s - library.getAllSongs().size() = " + library.getAllSongs().size());
         }
         
-        // Deserialize playLists
-        JsonArray playListsArray = jsonObject.getAsJsonArray("playLists");
-        for (JsonElement element : playListsArray) {
-            PlayList playList = gson.fromJson(element, PlayList.class);
-            if (!playList.getName().equals("Most recent songs") && 
-            		!playList.getName().equals("Most played songs") && 
-            		!playList.getName().equals("Favorited songs")) {
-            	library.addPlaylist(playList);
-            };
-        }
-
         // Deserialize recents
         PlayList recents = gson.fromJson(jsonObject.get("recents"), PlayList.class);
         library.setRecents(recents);
@@ -98,12 +88,29 @@ public class LibraryModelSerializer implements JsonSerializer<LibraryModel>, Jso
         // Deserialize favoritesPlayList
         PlayList favoritesPlayList = jDsContext.deserialize(jsonObject.get("favoritesPlayList"), PlayList.class);
         library.setFavoritesPlayList(favoritesPlayList);
+        
+        // Deserialize playLists
+        JsonArray playListsArray = jsonObject.getAsJsonArray("playLists");
+        for (JsonElement element : playListsArray) {
+            PlayList playList = gson.fromJson(element, PlayList.class);
+            if (!library.hasPlaylist(playList.getName())) {
+            	library.addPlaylist(playList);
+            }
+            /*
+            if (!playList.getName().equals("Most recent songs") && 
+            		!playList.getName().equals("Most played songs") && 
+            		!playList.getName().equals("Favorited songs")) {
+            	library.addPlaylist(playList);
+            };
+            */
+        }
 
         // Deserialize albums
         JsonArray albumsArray = jsonObject.getAsJsonArray("albums");
         for (JsonElement element : albumsArray) {
             Album album = jDsContext.deserialize(element, Album.class);
             library.addAlbum(album);
+            System.out.println("a - library.getAllSongs().size() = " + library.getAllSongs().size());
         }
         
         // Deserialize favorites
@@ -119,8 +126,6 @@ public class LibraryModelSerializer implements JsonSerializer<LibraryModel>, Jso
             Song playedSong = jDsContext.deserialize(element, Song.class);
             library.playSong(playedSong);
         }
-        
-        // Deserialize genres ??
         
         return library;
 	}
