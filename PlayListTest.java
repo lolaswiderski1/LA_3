@@ -70,5 +70,28 @@ class PlayListTest {
 		assertTrue(playList.hasSong(song));
 	}
 	
-	
+	 @Test
+	 void testClear() {
+		PlayList playlist = new PlayList("Spring 2025");
+        // Add some songs
+        playlist.addSong(new Song("Title1", "Artist1", "Album1", "Genre1"));
+        playlist.addSong(new Song("Title2", "Artist2", "Album2", "Genre2"));
+        
+        // Ensure playlist is not empty before clearing
+        assertFalse(playlist.isEmpty(), "Playlist should not be empty before clearing.");
+
+        // Clear the playlist
+        playlist.clear();
+
+        // Ensure the playlist is empty after clearing
+        assertTrue(playlist.isEmpty(), "Playlist should be empty after clearing.");
+    }
+	@Test
+	void testIsEmpty() {
+		PlayList pl = new PlayList("pl");
+		assertTrue(pl.isEmpty());
+		pl.addSong(song);
+		assertFalse(pl.isEmpty());
+	}
 }
+	
