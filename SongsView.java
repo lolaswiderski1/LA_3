@@ -134,12 +134,12 @@ public class SongsView extends LibraryView{
 		}
 	}
 	
-	public static void choiceShuffle() {
-		System.out.println("select a random song. \n");
+	public static void choiceShuffle() { 
 		System.out.println("shuffled songs: \n");
 		List<Song> shuffledSongs = lib.shuffleSongs();
 		displaySongs(shuffledSongs);
 		try {
+			System.out.println("select a random song. \n");
 			int choice = scanner.nextInt();
 			scanner.nextLine();
 			selectSong(choice, shuffledSongs);
