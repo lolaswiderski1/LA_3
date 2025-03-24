@@ -25,6 +25,7 @@ public class LibraryView {
 	    private static AlbumView albumView = new AlbumView(lib);
 	    private static AccountsManager accountsManager = new AccountsManager("data");
 	    private static String username;
+	    
 	    public static void main(String[] args) {
 	    	logInMainDisplay();
 		}
@@ -99,7 +100,6 @@ public class LibraryView {
 	    }
 		
 		public static void mainHome() {
-			//System.out.println("size before: " + lib.getPlayLists().size());
 			songsView = new SongsView(lib);
 		    playListView = new PlayListView(lib);
 		    albumView = new AlbumView(lib);
@@ -190,7 +190,6 @@ public class LibraryView {
 		}
 		
 	
-		
 		// handles searching for a song or album in the music store to add to library
 		private static void musicStoreOptions() {
 			// give options
@@ -354,16 +353,18 @@ public class LibraryView {
 				int selectIndex = scanner.nextInt();
 				scanner.nextLine();
 				addSongToLibrary(selectIndex, songs);
-			}catch(Exception e){
+			} catch(Exception e) {
 				System.out.println("Invalid input.");
 				scanner.nextLine();
 				addSongToLibrary(songs);
 			}
 		}
-		private static void addSongToLibrary(int i, List<Song> songs) {
+		
+		private static void addSongToLibrary(int i, List<Song> songs) { 
 			// find desired song
 			Song selectedSong = songs.get(i);
 			// handle exceptions
+			System.out.println(lib.hasSong(selectedSong));
 			if (lib.hasSong(selectedSong)) {
 				System.out.println("Song already exists in library. ");	
 				mainHome();
