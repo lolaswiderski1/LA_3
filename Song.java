@@ -63,10 +63,34 @@ public final class Song implements Comparable<Song>{
             return song.getArtist().compareTo(other.getArtist());
         }
     };
-
+    
 	@Override
 	public int compareTo(Song o) {
 		// TODO Auto-generated method stub
 		return 0;
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+	    if (this == obj) return true; // Check for reference equality
+	    if (obj == null || getClass() != obj.getClass()) return false; // Check for null and class type
+
+	    Song song = (Song) obj; // Cast to Song
+
+	    // Compare all relevant fields
+	    return songTitle.equals(song.songTitle) &&
+	           artist.equals(song.artist) &&
+	           albumTitle.equals(song.albumTitle) &&
+	           genre.equals(song.genre);
+	}
+
+	@Override
+	public int hashCode() {
+	    // Use a combination of the fields to generate a hash code
+	    int result = songTitle.hashCode();
+	    result = 31 * result + artist.hashCode();
+	    result = 31 * result + albumTitle.hashCode();
+	    result = 31 * result + genre.hashCode();
+	    return result;
 	}
 }
