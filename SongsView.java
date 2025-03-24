@@ -71,9 +71,7 @@ public class SongsView extends LibraryView{
             scanner.nextLine(); 
             home(); 
         }
-		
-	}
-	
+	}	
 
 	public static void choiceDisplay() {
 		System.out.println("[0] - show all songs in your library");
@@ -171,7 +169,7 @@ public class SongsView extends LibraryView{
 		selectSong(songsList);
 	}
 	
-	// method to loo for songs by artists
+	// method to look for songs by artists
 	private static void songByArtist() {
 		// check if library empty
 		//libIsEmpty();
@@ -189,7 +187,6 @@ public class SongsView extends LibraryView{
 		displaySongs(songsList);
 		// select a song 
 		selectSong(songsList);
-
 	}
 	
 	// gives users options after selecting song
@@ -199,13 +196,14 @@ public class SongsView extends LibraryView{
 			System.out.println("[1] - favorite song");
 			System.out.println("[2] - rate song");
 			System.out.println("[3] - remove song from your library");
-			System.out.println("[4] - home");
+			System.out.println("[4] - display album information");
+			System.out.println("[5] - home");
 			
 			try{
 				int option = scanner.nextInt();
 	            //scanner.nextLine(); 
 	            
-	            if (option < 0 || option > 4) {
+	            if (option < 0 || option > 5) {
 					System.out.println("invalid: out of range \n");
 					// return to homepage
 					home();				
@@ -222,9 +220,10 @@ public class SongsView extends LibraryView{
 		// display songs with ratings in library
 		private static void displaySongsInLib() {
 			// check library is empty
-			//libIsEmpty();
+			libIsEmpty();
 		    int i = 0;
 		    // print songs and ratings
+		    System.out.println("lib.getAllSongs().size() = " + lib.getAllSongs().size());
 		    for (Song song : lib.getAllSongs()) {
 		    	if (lib.getRating(song) == Rating.UNRATED) {
 		    		System.out.println("[" + i + "] " + song.getSongTitle() + ", " + song.getArtist());
@@ -286,12 +285,15 @@ public class SongsView extends LibraryView{
 				updateAccount();
 				System.out.println(selectedSong + " has been removed from your library. \n");
 				home();
-				
 			case 4:
+				displayAlbums(musicStore.getAlbumsByTitle(selectedSong.getAlbumTitle()));
+				//displayAlbums(lib.getAlbumsByTitle(selectedSong.getAlbumTitle()));
+				home();
+				break;
+			case 5:
 				// go home
 				home();
 				break;
-					
 			}
 		}
 		
@@ -356,8 +358,6 @@ public class SongsView extends LibraryView{
 				}
 				// return enum
 				return setRating;
-			
-			
 			} else {
 				System.out.println("enter number. \n");
 				home();
