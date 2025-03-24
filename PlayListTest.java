@@ -1,4 +1,4 @@
-package Model;
+package test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -7,12 +7,15 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
+import dataStructures.PlayList;
+import dataStructures.Song;
+
 class PlayListTest {
 	
 	// provides 100% coverage of playlist class, and passes every case.
 	
 	PlayList playList = new PlayList("Spring 2025");
-	Song song = new Song("Rock With You", "Micheal Jackson", "Off The Wall");
+	Song song = new Song("Rock With You", "Micheal Jackson", "Off The Wall", "Pop");
 	
 	@Test
 	void testCopyConstructor() {
@@ -46,7 +49,7 @@ class PlayListTest {
 	
 	@Test 
 	void testGetSong() {
-		Song song1 = new Song("Girlfriend", "Micheal Jackson", "Off The Wall");
+		Song song1 = new Song("Girlfriend", "Micheal Jackson", "Off The Wall", "Pop");
 		
 		PlayList playList = new PlayList("Spring 2025");
 		List<Song> songsList = new ArrayList<Song>();
