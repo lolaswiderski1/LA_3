@@ -2,6 +2,7 @@
 // class for the user to use the music library 
 package view;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -17,7 +18,7 @@ import model.MusicStore;
 import userManagement.AccountsManager;
 public class LibraryView {
 	// instantiate a music store, a scanner for the user, and a music library
-	    private static MusicStore musicStore = new MusicStore("albums");
+	    protected static MusicStore musicStore = new MusicStore("albums");
 	    private static Scanner scanner = new Scanner(System.in);
 	    private static LibraryModel lib = new LibraryModel(); 	
 	    private static SongsView songsView = new SongsView(lib);
@@ -25,6 +26,7 @@ public class LibraryView {
 	    private static AlbumView albumView = new AlbumView(lib);
 	    private static AccountsManager accountsManager = new AccountsManager("data");
 	    private static String username;
+	    
 	    public static void main(String[] args) {
 	    	logInMainDisplay();
 		}
@@ -91,10 +93,13 @@ public class LibraryView {
 	    			logInMainDisplay();
 	    		} else {
 	    			// set lib to retrieved data
+	    			System.out.println("	lib.getAllSongs().size() = " + lib.getAllSongs().size());
 	    			LibraryView.lib = accountsManager.getUserData(username);
 	    			
 	    		}
 	    	}
+	    	System.out.println("	lib.getAllSongs().size() = " + lib.getAllSongs().size());
+	    	//updateAccount();
 	    	mainHome();
 	    }
 		
@@ -104,7 +109,7 @@ public class LibraryView {
 		    playListView = new PlayListView(lib);
 		    albumView = new AlbumView(lib);
 			//System.out.println(lib);
-		    System.out.println("size after: " + lib.getPlayLists().size());
+		    //System.out.println("size after: " + lib.getPlayLists().size());
 			// home page for the program to jump back to after actions
 			System.out.println("\nWelcome to your personal music library " + username + "!\n");
 			// give initial options
@@ -183,8 +188,7 @@ public class LibraryView {
 				if(lib.getRating(songs.get(i)) == Rating.UNRATED) {
 					System.out.println("[" + i + "] " + songs.get(i) + ", " + songs.get(i).getAlbumTitle());
 			}   else {
-				System.out.println("[" + i + "] " + songs.get(i) + ", " + songs.get(i).getAlbumTitle() + ", " + 
-			lib.getRating(songs.get(i)));
+				System.out.println("[" + i + "] " + songs.get(i) + ", " + lib.getRating(songs.get(i)));
 				}
 			}
 		}
@@ -221,14 +225,14 @@ public class LibraryView {
 				case 1: 	// add song by title to lib
 					System.out.println("Enter song title: ");
 					String titleS = scanner.nextLine().toLowerCase();
+					// search for song by title using music store method
+					List<Song> songsByTitle = musicStore.getSongsByTitle(titleS);
 					// handle exceptions
-					if (musicStore.getSongsByTitle(titleS).size() == 0 ) {
+					if (songsByTitle.size() == 0 ) {
 						System.out.println("Song not found: " + titleS + "\n");
 						mainHome();
 						break;
 					}
-					// search for song by title using music store method
-					List<Song> songsByTitle = musicStore.getSongsByTitle(titleS);
 					// add to lib and go home
 					addSongToLibrary(songsByTitle);
 					mainHome();
@@ -308,24 +312,28 @@ public class LibraryView {
 			
 		}
 		protected static void albumChoice(int choice, List<Album> albums) {
-			// handle out of range exception
+			// handle out of range exceptions
 			if (choice < 0 || choice > albums.size()) {
 				System.out.println("Invalid input: " + choice + "\n");
 				mainHome();
 			}
 			// get desired album
 			Album selectedAlbum = albums.get(choice);
+			
 			// handle exception that albums is already in the library
 			if (lib.hasAlbum(selectedAlbum)) {
-				System.out.println("Album already exists in library. ");	
+				// add any new songs from selected album in music store to album in library
+				lib.addSongsToAlbum(selectedAlbum.getTitle(), selectedAlbum.getAllSongs());
+				updateAccount();
+				System.out.println(selectedAlbum.getTitle() + " updated in library.");
 				mainHome();
 				return;
-			} else {
-				// add album to library
-				lib.addAlbum(selectedAlbum);
-				updateAccount();
-				System.out.println(selectedAlbum.getTitle() + " has been added to library. \n");
 			}
+			
+			// add album to library
+			lib.addAlbum(selectedAlbum);
+			updateAccount();
+			System.out.println(selectedAlbum.getTitle() + " has been added to library.");
 		}
 
 		// method to show albums
@@ -355,11 +363,13 @@ public class LibraryView {
 				scanner.nextLine();
 				addSongToLibrary(selectIndex, songs);
 			}catch(Exception e){
-				System.out.println("Invalid input.");
+				e.printStackTrace();
+				System.out.println("Invalid input.xxx");
 				scanner.nextLine();
 				addSongToLibrary(songs);
 			}
 		}
+		
 		private static void addSongToLibrary(int i, List<Song> songs) {
 			// find desired song
 			Song selectedSong = songs.get(i);
@@ -371,11 +381,29 @@ public class LibraryView {
 			}
 			// add song to library
 			lib.addSong(selectedSong);
+			addAlbumBySong(selectedSong);
 			updateAccount();
 			System.out.println(selectedSong + " has been added to library. \n");
 		}
 	    
-		
+		private static void addAlbumBySong(Song song) {
+			String albumTitle = song.getAlbumTitle();
+			
+			if (lib.hasAlbumByTitle(albumTitle)) { // album exists in lib
+				List<Song> songToAdd = new ArrayList<>();
+				songToAdd.add(song);
+				lib.addSongsToAlbum(albumTitle, songToAdd);
+				System.out.println(song.getSongTitle() + " has been added to " + albumTitle);
+			}
+			else { // album does not exist in lib
+				List<Album> albums = musicStore.getAlbumsByTitle(albumTitle);
+				Album album = albums.get(0);
+				Album newAlbum = new Album(album.getTitle(),album.getArtist(),
+						album.getGenre(), album.getYear());
+				newAlbum.addSong(song);
+				lib.addAlbum(newAlbum);
+			}
+		}
 		
 		// display artists in library
 		private static void displayArtistsInLib() {
