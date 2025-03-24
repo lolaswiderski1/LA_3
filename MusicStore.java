@@ -1,3 +1,4 @@
+
 // Sam Hershey, Lola Swiderski
 // class to simulate music store. It stores the songs and albums from a test file into
 // an array list making its data accesible. 
@@ -87,9 +88,9 @@ public class MusicStore {
 			if (album.getArtist().equalsIgnoreCase(artist)) {
 				// adds every Song in album to songsByArtist
 				songsByArtist.addAll(album.getAllSongs());
-			}
+			} 
 		}
-		return songsByArtist; 
+		return songsByArtist;  
 	}
 	
 	// Returns the Album with the given title
@@ -122,5 +123,6 @@ public class MusicStore {
 			albumsCopy.add(new Album(album));
 		}
 		return albumsCopy;
+		
 	}
 }
