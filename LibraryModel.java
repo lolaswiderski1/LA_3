@@ -1,6 +1,6 @@
-// Sam Hershey, Lola Swiderski
-// class to simulate library model object. Contains methods necessary for a Library.
-// libraries contain playLists, songs, albums, and favorite songs
+// Authors: Sam Hershey, Lola Swiderski
+// Description:	Library model contains the users information of a music library
+// it allows them to preform tasks and saves their data.
 
 package model;
 
@@ -12,63 +12,53 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
 import dataStructures.Album;
 import dataStructures.PlayList;
 import dataStructures.Song;
 
 public class LibraryModel{
 	
-	// instantiate variables
+	// instantiate playlists, songs, favorites, 
+	// playedsongs, albums, and genres
+	// library features
 	private LinkedHashMap<Song, Rating> songs;
     private ArrayList<PlayList> playLists;
+    private ArrayList<Song> favorites;
+    private ArrayList<Song> playedSongs;
+    private ArrayList<Album> albums;
+    private HashMap<String, List<Song>> genres;
+    // instantiate default playlists in library
     private PlayList recents;
     private PlayList frequents;
     private PlayList favoritesPlayList;
-    private ArrayList<Album> albums;
-    private ArrayList<Song> favorites;
-    private ArrayList<Song> playedSongs;
-    private HashMap<String, List<Song>> genres;
     
-    public String toString() {
-    	StringBuilder sb = new StringBuilder();
-        
-        sb.append("Songs: ").append(songs).append("\n");
-        sb.append("Playlists: ").append(playLists).append("\n");
-        sb.append("Recents Playlist: ").append(recents).append("\n");
-        sb.append("Frequents Playlist: ").append(frequents).append("\n");
-        sb.append("Favorites Playlist: ").append(favoritesPlayList).append("\n");
-        sb.append("Albums: ").append(albums).append("\n");
-        sb.append("Favorites: ").append(favorites).append("\n");
-        sb.append("Played Songs: ").append(playedSongs).append("\n");
-        sb.append("Genres: ").append(genres).append("\n");
-        
-        return sb.toString();
-    }
-    
-    // enum to represent rating avoid primitive obsession
+    // stores a rating system so that users can rate songs
     public enum Rating {
     	UNRATED, ONE, TWO, THREE, FOUR, FIVE;
     }
     
-    // construct/initialize variables
+    // library model contructor
     public LibraryModel() {
-    	songs = new LinkedHashMap<Song, Rating>();
-        favorites = new ArrayList<Song>();
-        albums = new ArrayList<Album>();  
-        playLists = new ArrayList<PlayList>();
-        playedSongs = new ArrayList<Song>();
-        recents = new PlayList("Most recent songs");	// default playlists come with library
-        frequents = new PlayList("Most played songs");
-        favoritesPlayList = new PlayList("Favorited songs");
+    	
+    	songs = new LinkedHashMap<Song, Rating>();	// songs contain song object ane rating
+        favorites = new ArrayList<Song>();	// store favorite songs
+        albums = new ArrayList<Album>();	// store albums 
+        playLists = new ArrayList<PlayList>();    // store playlists
+        playedSongs = new ArrayList<Song>();	// store played songs
+        genres = new HashMap<>();
+        // store default playlists automatically in library object
+        recents = new PlayList("Most recent songs");	// store recently played songs pl
+        frequents = new PlayList("Most played songs");    // store most frequently played songs pl
+        favoritesPlayList = new PlayList("Favorited songs");	// store favorite songs pl
+        // add the playlists to the library
         playLists.add(recents);
         playLists.add(frequents);
         playLists.add(favoritesPlayList);
-        genres = new HashMap<>();
     }
     
-    // copy constructor
+    // create a shallow copy constructor for encapsulation
     public LibraryModel(LibraryModel other) {
+    	// make all features equal to another library's features
     	this.songs = other.songs;
     	this.favorites = other.favorites;
     	this.albums = other.albums;  
@@ -77,46 +67,72 @@ public class LibraryModel{
     	this.recents = other.recents;
     	this.frequents = other.frequents;
     	this.favoritesPlayList = other.favoritesPlayList;
-    	this.genres = other.genres;
+    	this.genres = other.genres; 
     }
     
+    // shuffleSongs shuffles the songs in the song map randomly using 
+    // Collections.shuffle.
     public List<Song> shuffleSongs() {
+    	// new list of shuffled songs list
     	List<Song> songList = new ArrayList<>(songs.keySet());
         Collections.shuffle(songList);
         return songList;
     }
     
+    // shufflePlaylists shuffles the playlists in the playlists list
+    // using Collections.shuffle.
     public List<PlayList> shufflePlaylists() {
         Collections.shuffle(playLists);
         return playLists;
     }
     
+    // removeSong removes a song from the songs map as well as any playlist
+    // that the song was in.
     public void removeSong(Song song) {
+    	// remove from songs map
     	songs.remove(song);
+    	// remove from playlists
+    	for (PlayList pl : playLists) {
+    		if (pl.hasSong(song)) {
+    			pl.removeSong(song);
+    		}
+    	}
     }
     
+    // sortByTitle sorts the songs in the songs map in alphabetical order by the
+    // song titles
     public List<Song> sortByTitle() {
     	List<Song> sort = new ArrayList<Song>();
+    	// iterate through song objects
     	for (Song song: songs.keySet()) {
     		sort.add(song);
     	}
+    	// use the Title comparison method in Song
     	Collections.sort(sort, Song.TitleComparator);
     	return sort;
     }
-    
+   
+    // sortByArtist sorts the songs in the songs map in alphabetical order by the
+    // song artists
     public List<Song> sortByArtist() {
     	List<Song> sort = new ArrayList<Song>();
+    	// iterate through song objects
     	for (Song song: songs.keySet()) {
     		sort.add(song);
     	}
+    	// use the Title comparison method in Song
     	Collections.sort(sort, Song.ArtistComparator);
     	return sort;
     }
     
+    // songByRating sorts songs in the songs map in ascending order by ratings
     public List<Song> sortByRating() {
+    	// create a list of the sorted values
     	ArrayList<Song> result = new ArrayList<Song>();
+    	// hashmap to store the ratings as integers instead of as enums. 
     	HashMap<Song, Integer> songsCopy = new HashMap<Song, Integer>();
     	for (Song song: songs.keySet()) {
+    		// one = 1, two = 2, three = 3, four = 4, 5= five
 			switch (getRating(song)) {
 				case UNRATED:
 					continue;
@@ -137,26 +153,35 @@ public class LibraryModel{
 					break;
 	    		}
     	}
-    	List<Map.Entry<Song, Integer>> sorted = bubbleSort(songsCopy);
+    	// sort the hashmap in descending order using Collections.sort
+    	List<Map.Entry<Song, Integer>> sorted = sortByValue(songsCopy);
+    	// put the list in ascending by reversing the list
     	Collections.reverse(sorted);
-	    for (Map.Entry<Song, Integer> entry : sorted) {	// get the songs without count
+    	// add the songs without rating to the sorted result list
+	    for (Map.Entry<Song, Integer> entry : sorted) {
             result.add(entry.getKey());
         }
-
     	return result;
     }
     
+   
+    // playSong plays a song by adding it to the playedSongs list, recents
+    // playlist, and sorts it in the frequents playlist.
     public void playSong(Song song) {
-       playedSongs.add(song);
+       // add the song to playedSongs
+       playedSongs.add(song); 
+       // sort through most frequents
        getMostFrequent();
+       // add songs to played list backwards
        ArrayList<Song> playedCopy = new ArrayList<Song>();
-       
        for (int i = playedSongs.size() - 1; i >= 0; i-- ) {
     	   playedCopy.add(playedSongs.get(i));
        }
+       // clear the recents playlist
        recents.clear();
+       // only add the first 10 most recently played sings to recent
        if (playedSongs.size() < 10) {
-    	   for (int i = 0; i < playedSongs.size(); i++ ) {
+    	   for (int i = 0; i < playedCopy.size(); i++ ) {
         	   recents.addSong(playedCopy.get(i));
            }
        } else {  
@@ -166,8 +191,12 @@ public class LibraryModel{
        }
     }
     
+    // countSongs counts how many times a song appears in a list
     public HashMap<Song, Integer> countSongs(List<Song> songsList){
+    	// create a hashmap containing the song and its integer count value
     	HashMap<Song, Integer> countSongs = new HashMap<>();
+        // for each song in the songs list, if it's not in the countSongs hashmap, 
+    	// its initialize count to 1, if it is, up the count by 1.
     	for (Song song : songsList) {
     	    if (countSongs.containsKey(song)) { 
     	        countSongs.put(song, countSongs.get(song) + 1);
@@ -177,116 +206,11 @@ public class LibraryModel{
     	}
         return countSongs;
     }
-     
-    public void getMostFrequent() {
-    	
-    	HashMap<Song, Integer> countSongs = countSongs(playedSongs);
-    	
-    	List<Map.Entry<Song, Integer>> sortCount = bubbleSort(countSongs).subList(0, Math.min(10, countSongs.size()));
-        ArrayList<Song> mostFrequent = new ArrayList<>();
-        for (Map.Entry<Song, Integer> entry : sortCount) {	// get the songs without count
-            mostFrequent.add(entry.getKey());
-        }
-
-        frequents.clear(); 
-        for (Song song : mostFrequent) {
-            frequents.addSong(song);
-        }
-
-    }
-   
-    public static List<Map.Entry<Song, Integer>> bubbleSort(HashMap<Song, Integer> map) {
-        List<Map.Entry<Song, Integer>> entryList = new ArrayList<>(map.entrySet());
-
-        for (int i = 0; i < entryList.size() - 1; i++) {
-            boolean swapped = false;  
-            for (int j = 0; j < entryList.size() - i - 1; j++) {
-                if (entryList.get(j).getValue() < entryList.get(j + 1).getValue()) {  
-                    Collections.swap(entryList, j, j + 1);
-                    swapped = true;
-                }
-            }
-            if (!swapped) break;
-        }
-        return entryList;
-    }
-     
-    // get a list of all songs in library
-    public List<Song> getAllSongs() {
-        return new ArrayList<>(songs.keySet());
-    }
     
-    // check is the library has a certain song
-    public boolean hasSong(Song song) {
-    	return songs.containsKey(song);
-    }
-    
-    public void addSong(Song song) {
-    	songs.put(song, Rating.UNRATED);
-    	
-        if (!genres.containsKey(song.getGenre())) {
-            genres.put(song.getGenre(), new ArrayList<>());
-        }
-        genres.get(song.getGenre()).add(song);
-        if (genres.get(song.getGenre()).size() == 10) {
-            PlayList genrePl = new PlayList(song.getGenre().toUpperCase());
-
-            for (Song s : genres.get(song.getGenre())) {
-                genrePl.addSong(s);
-            }
-            if (!playLists.contains(genrePl)) {  
-                playLists.add(genrePl);
-            }
-        }
-    }
-    
-    // check if an album is in the library
-    // returns true if album exists in library with all matching songs,
-    // false otherwise
-    public boolean hasAlbum(Album newAlbum) {
-    	return hasAlbumByTitle(newAlbum.getTitle());
-    	/*
-    	boolean contains = hasAlbumByTitle(newAlbum.getTitle());
-    	
-    	if (!contains) return false; // no album with this title exists
-    	
-    	List<Album> albums = getAlbumsByTitle(newAlbum.getTitle());
-    	Album album = albums.get(0);
-    	return album.equals(newAlbum);
-    	*/
-    }
-    
-    public void addSongsToAlbum(String albumTitle, List<Song> songs) {
-    	List<Album> albums = getAlbumsByTitle(albumTitle);
-    	Album album = albums.remove(0); // get and remove album with matching title
-    	for (Song song : songs) {
-    		// add each song to album if it wasn't already there
-    		if (!album.hasSong(song.getSongTitle())) {
-    			album.addSong(song);
-    		}
-    		
-    		// add each song to songs if it wasn't already there
-    		if (!hasSong(song)) {
-    			addSong(song);
-    		}
-    	}
-    	// re-add album with the new songs
-    	albums.add(album);
-    }
-    
-    // add an album to the library
-    public void addAlbum(Album newAlbum) {
-    	albums.add(new Album(newAlbum));
-    	
-    	// add any new songs to songs
-    	for (Song song : newAlbum.getAllSongs()) {
-    		if (!hasSong(song)) {
-    			addSong(song);
-    		}
-    	}
-    }
-    
+    // check to see if the library contains a playlist so that the user can search
+    // for a playlist
     public boolean hasPlaylist(String playListName) {
+    	// search each playlist in the library to find if it exists
     	for (PlayList pl : playLists) {
     		if (pl.getName().equals(playListName)) {
     			return true;
@@ -295,208 +219,362 @@ public class LibraryModel{
     	return false;
     }
     
-    // add a playlist to the library
-    public void addPlaylist(PlayList pl) {
-    	playLists.add(pl);
+    // getMostFrequent sorts the songs in the songs map by which ones are played the most frequently
+    // in ascendng order.
+    public void getMostFrequent() {
+    	// count how many times each song is played
+        HashMap<Song, Integer> countSongs = countSongs(playedSongs);
+        // sort the values of the played song counts
+        List<Map.Entry<Song, Integer>> sortCount = sortByValue(countSongs).subList(0, Math.min(10, countSongs.size()));
+        ArrayList<Song> mostFrequent = new ArrayList<>();
+        // extract songs without count
+        for (Map.Entry<Song, Integer> entry : sortCount) { 
+            mostFrequent.add(entry.getKey());
+        }
+        // clear the frequents playlist each time to avoid duplicates
+        frequents.clear();
+        HashSet<String> addedSongTitles = new HashSet<>(); // To track added song titles
+        // ensure the uniqueness of each song to avoid duplicates
+        for (Song song : mostFrequent) {
+            if (!addedSongTitles.contains(song.getSongTitle())) { 
+                frequents.addSong(song);
+                addedSongTitles.add(song.getSongTitle()); 
+            }
+        }
+    }
+
+    // sortByValue sorts a hashmap descending order
+    public static List<Map.Entry<Song, Integer>> sortByValue(HashMap<Song, Integer> map) {
+    	// sort using Collections.sort() with a custom comparator 
+        List<Map.Entry<Song, Integer>> entryList = new ArrayList<>(map.entrySet());
+        Collections.sort(entryList, (a, b) -> b.getValue().compareTo(a.getValue()));
+        // returns the sorted list
+        return entryList; 
     }
     
-    // rate a song in the library
-    public void rateSong(Song song, Rating rating) {
-    	// Find the song in the map
-        for (Map.Entry<Song, Rating> entry : songs.entrySet()) {
-            Song song1 = entry.getKey();
-            // If the song matches, update its rating
-            if (song1.getSongTitle().equals(song.getSongTitle()) &&
-                song1.getArtist().equals(song.getArtist())) {
-                entry.setValue(rating);
-                // If rating is FIVE, add to favorites
-                if (rating == Rating.FIVE) {
-                    favorites.add(song);
+    // addSongsToAlbum adds a list of songs to an album
+    public void addSongsToAlbum(String albumTitle, List<Song> songs) {
+    	// get the album to add songs to
+    	List<Album> albums = getAlbumsByTitle(albumTitle);
+    	// get and remove album with matching title
+    	Album album = albums.remove(0); 
+    	for (Song song : songs) {
+    		// add each song to album if it wasn't already there
+    		if (!album.hasSong(song.getSongTitle())) {
+    			album.addSong(song);
+    		}
+    		// add each song to songs if it wasn't already there
+    		if (!hasSong(song)) {
+    			addSong(song);
+    		}
+    	}
+    	// re-add album with the new songs
+    	albums.add(album);
+    }
+       
+    // getAllSongs gets a list of all songs in library
+    public List<Song> getAllSongs() {
+    	// return copy of songs key set
+        return new ArrayList<>(songs.keySet());
+    }
+    
+    // hasSong checks if the library has a certain song
+    public boolean hasSong(Song song) {
+    	return songs.containsKey(song);
+    }
+    
+    // addSong adds a song to the library and stores its genre in case
+    // a default playlist is to be made
+    public void addSong(Song song) {
+    	// put the song in the songs map
+    	songs.put(song, Rating.UNRATED);
+    	// initialize genre map containing the genre and the songs of that genre
+        if (!genres.containsKey(song.getGenre())) {
+            genres.put(song.getGenre(), new ArrayList<>());
+        }
+        // add the song to its genre map
+        genres.get(song.getGenre()).add(song);
+        // if more than 10 songs are in the genre key, make a playlist of the songs
+        // and add it to the library automatically
+        if (genres.get(song.getGenre()).size() == 10) {
+            PlayList genrePl = new PlayList(song.getGenre().toUpperCase());
+            // add the songs to the genres playlist
+            for (Song song1 : genres.get(song.getGenre())) {
+                genrePl.addSong(song1);
+            }
+            // check if the playlist is already in the library
+            boolean exists = false;
+            for (PlayList pl : playLists) {
+                if (pl.getName().equalsIgnoreCase(song.getGenre().toUpperCase())) {
+                    exists = true;
+                    break;
                 }
-                break; // Exit the loop once the song is found and updated
+            }
+            // add the playlist to library
+            if (!exists) {
+                playLists.add(genrePl);
             }
         }
     }
     
+    // hasAlbum checks if an album is in the library
+    public boolean hasAlbum(Album album) {
+	    // check if each album in the library matches the name and artist of the passed
+	    // in album
+    	for (Album album1 : albums) {
+    		if (album.getTitle().equals(album1.getTitle()) && album.getArtist().
+    				equals(album1.getArtist())) {
+    			return true;
+    		}
+    	}
+    	// if the album is not found, return false
+    	return false;
+    }
+    
+    // addAlbum adds an album to the library
+    public void addAlbum(Album album) {
+    	// add the album to the albums list
+		albums.add(album);
+		// add each song in the album to the songs map
+		for (Song song : album.getAllSongs()) {
+    		if (!hasSong(song)) {
+    			addSong(song);
+    		}
+    	}
+	} 
+    
+    
+    // addPlaylist adds a playlist to the library
+    public void addPlaylist(PlayList pl) {
+    	playLists.add(pl);
+    }
+    
+    // rateSong rates a song in the library value 1-5
+    public void rateSong(Song song, Rating rating) {
+    	// find the song in the songs map
+        for (Map.Entry<Song, Rating> entry : songs.entrySet()) {
+            Song song1 = entry.getKey();
+            // if the song matches, update its rating
+            if (song1.getSongTitle().equals(song.getSongTitle()) &&
+                song1.getArtist().equals(song.getArtist())) {
+                entry.setValue(rating);
+                // if rating is FIVE, add to favorites
+                if (rating == Rating.FIVE) {
+                    favorites.add(song);
+                }
+                // exit the loop once the song is updated
+                break; 
+            }
+        }
+    }
+    
+    // getRating returns the rating of a song
     public Rating getRating(Song song) {
+    	// the rating is the value of the ley value pairs in the songs map
     	return songs.get(song);
     }
 
-    // check if a song exists in the library depending on its title
+    
+    // hasSongByTitle checks if a song exists in the library depending on its title
     public boolean hasSongByTitle(String title) {
+    	// initialize the is found value as false for default
     	boolean result = false;
+    	// search through each song in the songs map and check if the titles match
     	for (Song song : songs.keySet()) {
     		if (song.getSongTitle().equalsIgnoreCase(title)) {
     			result = true;
     		}
     	}
+    	// result is whether a song exists by title or not
     	return result;
     }
    
-    // check if the library contains songs by a certain artist
+    // hasSongByArtist checks if the library contains songs by a certain artist
     public boolean hasSongByArtist(String artist) {
+    	// initialize the is found value as false for default
     	boolean result = false;
+    	// search through each song in the songs map and check if the artists match
     	for (Song song : songs.keySet()) {
     		if (song.getArtist().equalsIgnoreCase(artist)) {
     			result = true;
     		}
     	}
+    	// result is whether a song exists by artist or not
     	return result;
     }
     
-    // check if the library contains albums by a certain artist
+    // hasAlbumByArtist checks if the library contains albums by a certain artist
     public boolean hasAlbumByArtist(String artist) {
+    	// initialize the is found value as false for default
     	boolean result = false;
+    	// search through each album in the albums list and check if the artists match
     	for (Album album : albums) {
-    		if (album.getArtist().equalsIgnoreCase(artist)) {
+    		if (album.getArtist().equalsIgnoreCase(artist)) { 
     			result = true;
     		}
     	}
+    	// result is whether a album exists by artist or not
     	return result;
     }
    
-    // check if an album is in the library from its title
+    // hasAlbumByTitle checks if an album is in the library from its title
     public boolean hasAlbumByTitle(String title) {
+    	// initialize the is found value as false for default
     	boolean result = false;
+    	// search through each album in the albums list and check if the titles match
     	for (Album album : albums) {
     		if (album.getTitle().equalsIgnoreCase(title)) {
     			result = true;
     		}
     	}
+    	// result is whether an album exists by title or not
     	return result;
     }
     
-    // add a favorite to the favorites list
+    // addFavorite adds a favorite to the favorites list
     public void addFavorite(Song song) {
+    	// when a song is favorited, it's automatically rated a 5
     	rateSong(song, Rating.FIVE);
-    	//favorites.add(song);
     }
     
-    // get map of songs to ratings
+    // getSongsMap returns the map of songs in library to ratings
     public Map<Song, Rating> getSongsMap() {
     	return songs;
     }
     
-    // get recents playlist
+    // getRecents returns the most recently played playlist
     public PlayList getRecents() {
     	return new PlayList(recents);
     }
     
-    // get frequents playlist
+    // getFrequents returns the most frequently played playlist
     public PlayList getFrequents() {
     	return new PlayList(frequents);
     }
     
-    // get favoritesPlayList playList
+    // getFavoritesPlayList returns the favorited songs playList
     public PlayList getFavoritesPlayList() {
 		return new PlayList(favoritesPlayList);
 	}
     
-    // get playedSongs
+    // getPlayedSongs returns the list of played songs
     public List<Song> getPlayedSongs() {
     	return new ArrayList<>(playedSongs);
     }
     
-    // get genres
+    // getGenres returns the map of genres in the library to their list
+    // of songs
     public Map<String, List<Song>> getGenres() {
     	return new HashMap<>(genres);
     }
     
-    // get a list of song titles
+    // getSongTitles returns a list of all song titles in the library
     public List<String> getSongTitles() {
-    	// add all song titles to string list
+    	// initalize a list of strings to store the titles
     	ArrayList<String> titles = new ArrayList<String>();
+    	// add all of the song titles to String list
     	for (Song song : songs.keySet()) {
     		titles.add(song.getSongTitle());
     	}
+    	// return the list of titles
     	return titles;
     }
     
-    // get a list of all song artists
+    // getSongArtists returns a list of all song artists
     public Set<String> getSongArtists() {
-        // Use HashSet to store unique artist names
+        // use HashSet to store unique artist names
         Set<String> artists = new HashSet<>();
-        // Iterate over the song keys and collect artist names
+        // iterate over the song keys and store artist names
         for (Song song : songs.keySet()) {
             artists.add(song.getArtist());
         }
-
+        // return the set of artists
         return artists;
     }
     
-    // get a list of all albums
+    // getAlbums returns a list of all albums in the library
     public List<Album> getAlbums() {
     	// return deep copy of albums list
     	ArrayList<Album> albumsCopy = new ArrayList<Album>();
+    	// add the albums to the albums copy
     	for (Album album : albums) {
     		albumsCopy.add(new Album(album));
     	}
     	return albumsCopy;
     }
     
-    // get a list of all album titles
+    // getAlbumTitles returns a list of all album titles in the library
     public List<String> getAlbumTitles() {
-    	// return deep copy of albums list
+    	// make a list of strings to store the album titles
     	ArrayList<String> albumTitles = new ArrayList<String>();
+    	// add the album titles to the String list
     	for (Album album : albums) {
     		albumTitles.add(album.getTitle());
     	}
     	return albumTitles;
     }
     
-    // get a list of all album artists
+    // getAlbumArtists returns a list of all album artists
     public List<String> getAlbumArtists() {
-    	// return deep copy of albums list
+    	// make a list of strings to store the album artists
     	ArrayList<String> albumArtists = new ArrayList<String>();
+    	// add the album artists to the String list
     	for (Album album : albums) {
     		albumArtists.add(album.getArtist());
     	}
     	return albumArtists;
     }
     
-    // get a list of all playlists
+    //getPlayLists returns a list of all playlists
     public List<PlayList> getPlayLists() {
-    	// return deep copy of playlists list
+    	// return a copy of the playlists in the playlists list
     	List<PlayList> playListsCopy = new ArrayList<PlayList>();
+    	// add each playlist to the playlists copy
     	for (PlayList playList : playLists) {
     		playListsCopy.add(new PlayList(playList));
     	}
     	return playListsCopy;
     }
     
-    // get a list of the favorite songs
+    // getFavorites returns a list of the users favorite songs in library
     public List<Song> getFavorites() {
-    	// return immutable songs list
+    	// return an immutable songs list
     	return new ArrayList<>(favorites);
     }
     
-    // get a list of songs with a specified title
+    // getSongsByTitle returns a list of songs with a specified title
     public List<Song> getSongsByTitle(String title) {
-    	// return all songs with desired title
+    	// check if for each song in the songs map, one of them matches the 
+    	// desired title
     	List<Song> songsByTitle = new ArrayList<Song>();
-    	for (Song song : songs.keySet()) {
+    	for (Song song : songs.keySet()) { 
+    		// ensure case insensitivity
     		if (song.getSongTitle().equalsIgnoreCase(title)) {
     			songsByTitle.add(song);
     		}
     	} return songsByTitle;
     }
     
-    // get a list of songs by a certain artist
+    // getSongsByArtist returns a list of songs with a specified artist
     public List<Song> getSongsByArtist(String artist) { 
-    	// return all songs by a certain artist
+    	// check if for each song in the songs map, one of them matches the 
+    	// desired artist
     	List<Song> songsByArtist = new ArrayList<Song>();
     	for (Song song : songs.keySet()) {
+    		// ensure case insensitivity
     		if (song.getArtist().equalsIgnoreCase(artist)) {
     			songsByArtist.add(song);
     		}
     	} return songsByArtist;
     }
    
-    // get a list of albums with a certain title
+    // getAlbumsByTitle returns a list of albums with a specified title
     public List<Album> getAlbumsByTitle(String title) {
-    	// return an album by its title name
+    	// check if for each album in the albums list, one of them matches the 
+    	// desired title
     	List<Album> albumsByTitle = new ArrayList<>();
     	for (Album album1 : albums) {
+    		// ensure case insensitivity
     		if (album1.getTitle().equalsIgnoreCase(title)) {
     			albumsByTitle.add(album1);
     		} 
@@ -504,26 +582,27 @@ public class LibraryModel{
     	return albumsByTitle;
     }
     
-    // get a list of albums by an artist
+    // getAlbumsByArtist returns a list of albums with a specified artist
     public List<Album> getAlbumsByArtist(String artist) {
-    	// return immutable albums list
+    	// check if for each album in the albums list, one of them matches the 
+    	// desired artist
     	List<Album> albumsByArtist = new ArrayList<Album>();
     	for (Album album1 : albums) {
+    		// ensure case insensitivity
     		if (album1.getArtist().equalsIgnoreCase(artist)) {
     			albumsByArtist.add(album1);
     		}
     	} return albumsByArtist;
     }
     
-    // get a list of songs within a playlist
+    // getPlayList returns a list of songs within a playlist
     public List<Song> getPlayList(PlayList playList) {
-    	System.out.println(playLists);
     	List<Song> plSongs = new ArrayList<Song>();
     	for (PlayList playList1: playLists) {
     		// check each playlist in playlists 
     		if (playList1.getName().equals(playList.getName())) {
-    			// if name matches return deep copy list of songs 
-    			// in playlist
+    			// if name matches return a copy list of songs 
+    			// inside of the playlist
     			for (Song song : playList.getSongs()) {
     				plSongs.add(song);
     			}
@@ -531,15 +610,18 @@ public class LibraryModel{
     		}
     	} return null;
     }
-
+    
+    // setRecents sets the recents playlist to a new playlist
 	public void setRecents(PlayList recents) {
 		this.recents = new PlayList(recents);
 	}
-
+    
+	// setFrequents sets the frequents playlist to a new playlist
 	public void setFrequents(PlayList frequents) {
 		this.frequents = new PlayList(frequents);
 	}
-
+    
+	// setFavorites sets the favorites playlist to a new playlist
 	public void setFavoritesPlayList(PlayList favoritesPlayList) {
 		this.favoritesPlayList = new PlayList(favoritesPlayList);
 	} 
