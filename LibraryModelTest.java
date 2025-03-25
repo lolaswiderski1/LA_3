@@ -355,7 +355,7 @@ class LibraryModelTest {
 
         // Verify that recents still only holds the 5 most recent songs, with song1 at the front
         recentsList = lib.getRecents().getSongs();
-        assertEquals(6, recentsList.size());
+        assertEquals(5, recentsList.size());
         assertEquals(song1, recentsList.get(0)); // song1 should now be the most recent
         assertEquals(song2, recentsList.get(4));  // song2 should be the oldest in recents
     }
@@ -493,6 +493,14 @@ class LibraryModelTest {
             lib.addSong(new Song("songTitle" + i, "artist" + i, "albumTitle" + i, "genre"));
         }
         assertTrue(lib.hasPlaylist("GENRE"));
+    }
+    
+    @Test
+    void testRemoveAlbum() {
+    	lib.addAlbum(album1);
+    	assertTrue(lib.hasAlbum(album1));
+    	lib.removeAlbum(album1);
+    	assertFalse(lib.hasAlbum(album1));
     }
     
 }
