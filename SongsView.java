@@ -18,7 +18,7 @@ public class SongsView extends LibraryView{
 	}
 	
 	public static void home() {
-		
+
 		System.out.println("[0] - open the songs in your library");
 		System.out.println("[1] - search for a song in your library");
 		System.out.println("[2] - shuffle songs");
@@ -273,6 +273,7 @@ public class SongsView extends LibraryView{
 			case 1:
 				// add to favorites list in lib model
 				lib.addFavorite(selectedSong);
+				lib.getFavorites().add(selectedSong);
 				updateAccount();
 				System.out.println(selectedSong.getSongTitle() +" has been added to favorites!");
 				System.out.println(selectedSong.getSongTitle() + " has been rated a 5! \n");
@@ -354,7 +355,7 @@ public class SongsView extends LibraryView{
 					System.out.println(songTitle + " has been rated a " + rating);
 					System.out.println(songTitle + " has been added to favorites!\n");
 					home();
-					break;
+					break;  
 				}
 				// return enum
 				return setRating;
@@ -369,11 +370,11 @@ public class SongsView extends LibraryView{
 	// display favorite songs in library
 	private static void displayFavorites() {
 		// check if empty
-		//libIsEmpty();
 		System.out.println("Favorite songs:");
 		List<Song> songsList = lib.getFavorites();
 		// print list of favorite songs
 		displaySongs(songsList);
+		System.out.println();
 		// go home
 		home();
 	}
