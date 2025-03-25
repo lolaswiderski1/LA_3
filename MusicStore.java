@@ -35,7 +35,7 @@ public class MusicStore {
             while ((currFilename = br.readLine()) != null) {
             	currFilename = currFilename.replace(',', '_');
             	currFilename += ".txt";
-            	addAlbumToAlbumsList(currFilename);
+            	addAlbumToAlbumsList(currFilename); 
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -79,7 +79,7 @@ public class MusicStore {
 		}
 		return songsByTitle;
 	}
-	
+	 
 	// Returns list of all Songs by given artist
 	public List<Song> getSongsByArtist(String artist) { 
 		List<Song> songsByArtist = new ArrayList<>();
