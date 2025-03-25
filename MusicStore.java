@@ -1,4 +1,3 @@
-
 // Sam Hershey, Lola Swiderski
 // class to simulate music store. It stores the songs and albums from a test file into
 // an array list making its data accesible. 
