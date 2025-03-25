@@ -34,20 +34,30 @@ public class LibraryView {
 	     
 	    
 	    private static void logInMainDisplay() {
-	    	System.out.println("\nLog in or create an account.\n");
-	    	System.out.println("[0] - create a new account");
-	    	System.out.println("[1] - log in");
-	    	
-	    	// select choice
-	    	try {
-	    		int choice = scanner.nextInt();
-	    		scanner.nextLine(); 
-	    		logInOrCreateAccount(choice);
-	    	} catch(Exception e) {
-	    	    e.printStackTrace();
-	    	}
+	        System.out.println("\nLog in or create an account.\n");
+	        System.out.println("[0] - Create a new account");
+	        System.out.println("[1] - Log in");
+	        // keep asking until a valid input is given
+	        while (true) {  
+	            if (scanner.hasNextInt()) {
+	                int choice = scanner.nextInt();
+	                scanner.nextLine(); 
+
+	                if (choice == 0 || choice == 1) {
+	                    logInOrCreateAccount(choice);
+	                    // exit the loop after a valid choice
+	                    break; 
+	                } else {
+	                    System.out.println("Invalid input");
+	                }
+	            } else {
+	                System.out.println("Invalid input");
+	                // discard invalid input
+	                scanner.next(); 
+	            }
+	        }
 	    }
-	    
+
 	    private static void logInOrCreateAccount(int choice) {
 	    	switch (choice) {
 	    	case 0:
@@ -87,7 +97,7 @@ public class LibraryView {
 	    		logInMainDisplay();
 	    	} else {
 	    		LibraryView.username = username;
-	    		System.out.println("Enter password:");
+	    		System.out.println("Enter password: ");
 	    		String password = scanner.nextLine();
 	    		if (!accountsManager.validatePassword(username, password)) {
 	    			System.out.println("Invalid password.");
@@ -95,21 +105,17 @@ public class LibraryView {
 	    		} else {
 	    			// set lib to retrieved data
 	    			LibraryView.lib = accountsManager.getUserData(username);
-	    			System.out.println(lib.getAllSongs().size());
 	    			
 	    		}
 	    	}
 	    	//updateAccount();
-	    	mainHome();
+	    	mainHome(); 
 	    }
 		
 		public static void mainHome() {
 			songsView = new SongsView(lib);
 		    playListView = new PlayListView(lib);
 		    albumView = new AlbumView(lib);
-			//System.out.println(lib);
-		    //System.out.println("size after: " + lib.getPlayLists().size());
-			// home page for the program to jump back to after actions
 			System.out.println("\nWelcome to your personal music library " + username + "!\n");
 			// give initial options
 			System.out.println("[0] - shop music store");
@@ -184,7 +190,7 @@ public class LibraryView {
 		protected static void displaySongs(List<Song> songs) {
 				// display the songs display a list of songs by index title and album
 			for (int i = 0; i < songs.size(); i++) {
-				if(lib.getRating(songs.get(i)) == Rating.UNRATED) {
+				if((!lib.hasSong(songs.get(i)) || lib.getRating(songs.get(i)) == Rating.UNRATED) ){
 					System.out.println("[" + i + "] " + songs.get(i) + ", " + songs.get(i).getAlbumTitle());
 			}   else {
 				System.out.println("[" + i + "] " + songs.get(i) + ", " + lib.getRating(songs.get(i)));
@@ -296,7 +302,7 @@ public class LibraryView {
 		private static void addAlbumToLibrary(List<Album> albums) {
 			// display albums to add
 			displayAlbums(albums);
-			
+			 
 			System.out.println("Select album to add: ");
 			if (scanner.hasNextInt()) {
 				int selectedAlbumIndex = scanner.nextInt();
@@ -404,8 +410,6 @@ public class LibraryView {
 		
 		// display artists in library
 		private static void displayArtistsInLib() {
-			// check if empty lib
-			//libIsEmpty();
 		    // Use HashSet to store unique artists
 		    Set<String> artists = new HashSet<>(lib.getSongArtists());
 		    // print each artist
