@@ -1,6 +1,5 @@
-
 // Sam Hershey, Lola Swiderski
-// class to simulate Album object. Albums contain artist, titles, genre, year, and songs
+// Class to simulate Album object. Albums contain artist, titles, genre, year, and songs
 
 package dataStructures;
 
