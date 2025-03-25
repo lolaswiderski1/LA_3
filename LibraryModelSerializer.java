@@ -26,9 +26,6 @@ public class LibraryModelSerializer implements JsonSerializer<LibraryModel>, Jso
         }
         jsonObject.add("songs", songsObject);
         
-        // Serialize playLists
-        jsonObject.add("playLists", jSContext.serialize(library.getPlayLists()));
-
         // Serialize recents
         jsonObject.add("recents", jSContext.serialize(library.getRecents()));
 
@@ -37,6 +34,9 @@ public class LibraryModelSerializer implements JsonSerializer<LibraryModel>, Jso
         
         // Serialize favoritesPlayList
         jsonObject.add("favoritesPlayList", jSContext.serialize(library.getFavoritesPlayList()));
+        
+        // Serialize playLists
+        jsonObject.add("playLists", jSContext.serialize(library.getPlayLists()));
 
         // Serialize albums
         jsonObject.add("albums", jSContext.serialize(library.getAlbums()));
@@ -58,7 +58,7 @@ public class LibraryModelSerializer implements JsonSerializer<LibraryModel>, Jso
         
         return jsonObject;
 	}
-	
+	 
 	@Override
 	public LibraryModel deserialize(JsonElement json, Type type, JsonDeserializationContext jDsContext) {
 		JsonObject jsonObject = json.getAsJsonObject();
@@ -93,12 +93,24 @@ public class LibraryModelSerializer implements JsonSerializer<LibraryModel>, Jso
         JsonArray playListsArray = jsonObject.getAsJsonArray("playLists");
         for (JsonElement element : playListsArray) {
             PlayList playList = gson.fromJson(element, PlayList.class);
+        
+           
+             
+            if (playList.getName().equals("Most recent songs")) {
+            	library.setPlayList(recents);
+            }
+            if (playList.getName().equals("Most played songs")) {
+            	library.setPlayList(frequents);
+            }
+            if (playList.getName().equals("Favorited songs")) {
+            	library.setPlayList(favoritesPlayList);
+            }
             if (!library.hasPlaylist(playList.getName())) {
             	library.addPlaylist(playList);
             }
      
         }
-
+ 
         // Deserialize albums
         JsonArray albumsArray = jsonObject.getAsJsonArray("albums");
         for (JsonElement element : albumsArray) {
