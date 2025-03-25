@@ -45,7 +45,7 @@ public class UserAccount {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        } else {
+        } else { 
             try (FileReader reader = new FileReader(file)) {
                 // Print the JSON content for debugging
                 StringBuilder jsonContent = new StringBuilder();
