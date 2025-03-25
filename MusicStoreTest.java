@@ -12,7 +12,7 @@ import model.MusicStore;
 
 class MusicStoreTest {
 	
-	MusicStore store = new MusicStore("albums");
+	MusicStore store = new MusicStore("test_albums");
 	
 	@Test
 	void testWrongDirectory() {
