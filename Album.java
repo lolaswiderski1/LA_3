@@ -25,7 +25,7 @@ public class Album {
 		this.year = year;
 	}
 	
-	// Copy constructor
+	// Copy constructor 
 	public Album(Album otherAlbum) {
 		// encapsulation
 		this.artist = otherAlbum.artist;
@@ -134,4 +134,13 @@ public class Album {
 	    // Compute the hash code based on the set of song titles
 	    return songTitles.hashCode();
 	}
+	
+	public void removeSong(Song song) {
+		for (int i = 0; i < songs.size(); i++) {
+			if (songs.get(i).equals(song)) {
+				songs.remove(song);
+			}
+	}
+	}
 }
+
