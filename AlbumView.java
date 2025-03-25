@@ -91,7 +91,34 @@ public class AlbumView extends LibraryView {
 		for (int i = 0; i < lib.getAlbums().size();i++) {
 			System.out.println("[" + i + "]" + " " + lib.getAlbums().get(i));
 		}
-		mainHome();
+		System.out.println("Select an album: \n");
+		int choice = scanner.nextInt();
+		scanner.nextLine();
+		
+		Album selectedAlbum = lib.getAlbums().get(choice);
+		System.out.println("Album selected: " + selectedAlbum);
+		System.out.println("[0] - remove album");
+		System.out.println("[1] - go home");
+		try {
+			int choice1 = scanner.nextInt();
+			scanner.nextLine();
+			switch(choice1) {
+			case 0:
+				lib.removeAlbum(selectedAlbum);
+				updateAccount();
+				System.out.println(selectedAlbum.getTitle() + " has been removed. \n");
+				home();
+			case 1:
+				home();
+			default:
+				System.out.print(" \ninvalid \n");
+				home();
+			}
+		}
+		catch (Exception e) {
+			System.out.println("\ninvalid \n");
+			displayAlbumsInLib();
+		}
 	}
 	
 	// albumByArtist gets every album by an artist 
@@ -107,9 +134,9 @@ public class AlbumView extends LibraryView {
 		// get the albumByArtist list using library model method
 		List<Album> songsList = lib.getAlbumsByArtist(artist);
 		// display the albums
-		displayAlbums(songsList);
+		displayAlbums(songsList); 
 		// go home
-		mainHome();
+		mainHome(); 
 	}
 	
 	// albumByTitle gets the albums with a certain title
@@ -128,6 +155,6 @@ public class AlbumView extends LibraryView {
 		displayAlbums(songsList);
 		// jump home
 		mainHome();
-	}		
+	}	
 }
 	
