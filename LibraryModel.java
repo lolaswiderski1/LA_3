@@ -23,7 +23,7 @@ public class LibraryModel{
 	// library features
 	private LinkedHashMap<Song, Rating> songs;
     private ArrayList<PlayList> playLists;
-    private ArrayList<Song> favorites;
+    public ArrayList<Song> favorites;
     private ArrayList<Song> playedSongs;
     private ArrayList<Album> albums;
     private HashMap<String, List<Song>> genres;
@@ -39,7 +39,6 @@ public class LibraryModel{
     
     // library model contructor
     public LibraryModel() {
-    	
     	songs = new LinkedHashMap<Song, Rating>();	// songs contain song object ane rating
         favorites = new ArrayList<Song>();	// store favorite songs
         albums = new ArrayList<Album>();	// store albums 
@@ -97,7 +96,29 @@ public class LibraryModel{
     			pl.removeSong(song);
     		}
     	}
+    	for (Album album : albums) {
+    		if (album.hasSong(song.getSongTitle())) {
+    			album.removeSong(song); 
+    		}
+    	}
     }
+    
+    public void removeAlbum(Album album) {
+		while (album.getAllSongs().size() != 0) {
+			removeSong(album.getAllSongs().get(0));
+		}
+		int i = 0;
+		while (i < albums.size())
+		{
+			if (albums.get(i).getTitle().equals(album.getTitle())) {
+				albums.remove(i);
+			}
+			else {
+				i++;
+			}
+		}
+		
+	}
     
     // sortByTitle sorts the songs in the songs map in alphabetical order by the
     // song titles
@@ -145,7 +166,7 @@ public class LibraryModel{
 				case THREE:
 					songsCopy.put(song, 3);
 					break;
-				case FOUR:
+				case FOUR: 
 					songsCopy.put(song, 4);
 					break;
 				case FIVE:
@@ -164,32 +185,32 @@ public class LibraryModel{
     	return result;
     }
     
-   
-    // playSong plays a song by adding it to the playedSongs list, recents
-    // playlist, and sorts it in the frequents playlist.
-    public void playSong(Song song) {
-       // add the song to playedSongs
-       playedSongs.add(song); 
-       // sort through most frequents
-       getMostFrequent();
-       // add songs to played list backwards
-       ArrayList<Song> playedCopy = new ArrayList<Song>();
-       for (int i = playedSongs.size() - 1; i >= 0; i-- ) {
-    	   playedCopy.add(playedSongs.get(i));
-       }
-       // clear the recents playlist
-       recents.clear();
-       // only add the first 10 most recently played sings to recent
-       if (playedSongs.size() < 10) {
-    	   for (int i = 0; i < playedCopy.size(); i++ ) {
-        	   recents.addSong(playedCopy.get(i));
-           }
-       } else {  
-    	   for (int i = 0; i < 10; i++ ) {
-    		   recents.addSong(playedCopy.get(i));
-    	   }  
-       }
-    }
+	 // playSong plays a song by adding it to the playedSongs list, recents
+	 // playlist, and sorts it in the frequents playlist.
+	 public void playSong(Song song) {
+	     // add the song to playedSongs
+	     playedSongs.add(song); 
+	     // sort through most frequents
+	     getMostFrequent();
+	     // add songs to played list backwards
+	     ArrayList<Song> playedCopy = new ArrayList<>();
+	     for (int i = playedSongs.size() - 1; i >= 0; i--) {
+	         playedCopy.add(playedSongs.get(i));
+	     }
+	     // clear the recents playlist
+	     recents.clear();
+	     // only add the first 10 most recently played songs to recents
+	     int count = 0;
+	     for (int i = 0; i < playedCopy.size() && count < 10; i++) {
+	         Song currentSong = playedCopy.get(i);
+	         // Only add if it's not already in recents
+	         if (!recents.hasSong(currentSong)) {
+	             recents.addSong(currentSong);
+	             count++; // Increase the count of unique songs added
+	         }
+	     }
+	 }
+
     
     // countSongs counts how many times a song appears in a list
     public HashMap<Song, Integer> countSongs(List<Song> songsList){
@@ -338,7 +359,7 @@ public class LibraryModel{
 		// add each song in the album to the songs map
 		for (Song song : album.getAllSongs()) {
     		if (!hasSong(song)) {
-    			addSong(song);
+    			addSong(song); 
     		}
     	}
 	} 
@@ -349,24 +370,34 @@ public class LibraryModel{
     	playLists.add(pl);
     }
     
-    // rateSong rates a song in the library value 1-5
+    // rateSong rates a song in the library with a value from 1 to 5
     public void rateSong(Song song, Rating rating) {
-    	// find the song in the songs map
+        // find the song in the songs map
         for (Map.Entry<Song, Rating> entry : songs.entrySet()) {
             Song song1 = entry.getKey();
             // if the song matches, update its rating
             if (song1.getSongTitle().equals(song.getSongTitle()) &&
                 song1.getArtist().equals(song.getArtist())) {
+                
                 entry.setValue(rating);
-                // if rating is FIVE, add to favorites
-                if (rating == Rating.FIVE) {
+
+                // if rating is FIVE, add to favorites if not already present
+                if (rating == Rating.FIVE && !favorites.contains(song1)) {
+                    favoritesPlayList.addSong(song1);
                     favorites.add(song);
+                } 
+                // if rating is less than FIVE, remove from favorites if present
+                else if (rating != Rating.FIVE) {
+                	favoritesPlayList.removeSong(song1);
+                	favorites.remove(song);
                 }
+
                 // exit the loop once the song is updated
-                break; 
+                break;
             }
         }
     }
+
     
     // getRating returns the rating of a song
     public Rating getRating(Song song) {
@@ -536,6 +567,14 @@ public class LibraryModel{
     	return playListsCopy;
     }
     
+    public void setPlayList(PlayList newPlayList) {
+    	for (int i = 0; i < playLists.size(); i++) {
+    		if (playLists.get(i).getName().equals(newPlayList.getName())) {
+    			playLists.set(i, new PlayList(newPlayList));
+    		}
+    	}
+    }
+    
     // getFavorites returns a list of the users favorite songs in library
     public List<Song> getFavorites() {
     	// return an immutable songs list
@@ -625,4 +664,7 @@ public class LibraryModel{
 	public void setFavoritesPlayList(PlayList favoritesPlayList) {
 		this.favoritesPlayList = new PlayList(favoritesPlayList);
 	} 
+	
+	
+	
 }
