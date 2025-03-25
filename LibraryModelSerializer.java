@@ -1,4 +1,6 @@
-
+// Authors: Sam Hershey, Lola Swiderski
+// Description: Serializer and deserializer for LibraryModel to convert between JSON and Java objects
+// Handles conversion of songs, playlists, albums, and other library data structures
 package model;
 
 import com.google.gson.*;
@@ -14,6 +16,7 @@ import java.util.ArrayList;
 
 public class LibraryModelSerializer implements JsonSerializer<LibraryModel>, JsonDeserializer<LibraryModel> {
 	
+	// Serializes data from library to json file
 	@Override
 	public JsonElement serialize(LibraryModel library, Type type, JsonSerializationContext jSContext) {
 		JsonObject jsonObject = new JsonObject();
@@ -25,7 +28,7 @@ public class LibraryModelSerializer implements JsonSerializer<LibraryModel>, Jso
             songsObject.add(song.toString(), jSContext.serialize(entry.getValue()));
         }
         jsonObject.add("songs", songsObject);
-        
+
         // Serialize recents
         jsonObject.add("recents", jSContext.serialize(library.getRecents()));
 
@@ -47,18 +50,10 @@ public class LibraryModelSerializer implements JsonSerializer<LibraryModel>, Jso
         // Serialize playedSongs
         jsonObject.add("playedSongs", jSContext.serialize(library.getPlayedSongs()));
         
-        // Serialize genres
-        JsonObject genresObject = new JsonObject();
-        for (Map.Entry<String, List<Song>> entry : library.getGenres().entrySet()) {
-            String genre = entry.getKey();
-            List<Song> songs = entry.getValue();
-            genresObject.add(genre, jSContext.serialize(songs));
-        }
-        jsonObject.add("songs", songsObject);
-        
         return jsonObject;
 	}
-	 
+	
+	// Deserializes data from json file to library
 	@Override
 	public LibraryModel deserialize(JsonElement json, Type type, JsonDeserializationContext jDsContext) {
 		JsonObject jsonObject = json.getAsJsonObject();
@@ -92,10 +87,7 @@ public class LibraryModelSerializer implements JsonSerializer<LibraryModel>, Jso
         // Deserialize playLists
         JsonArray playListsArray = jsonObject.getAsJsonArray("playLists");
         for (JsonElement element : playListsArray) {
-            PlayList playList = gson.fromJson(element, PlayList.class);
-        
-           
-             
+            PlayList playList = gson.fromJson(element, PlayList.class);             
             if (playList.getName().equals("Most recent songs")) {
             	library.setPlayList(recents);
             }
@@ -110,7 +102,7 @@ public class LibraryModelSerializer implements JsonSerializer<LibraryModel>, Jso
             }
      
         }
- 
+
         // Deserialize albums
         JsonArray albumsArray = jsonObject.getAsJsonArray("albums");
         for (JsonElement element : albumsArray) {
@@ -118,13 +110,6 @@ public class LibraryModelSerializer implements JsonSerializer<LibraryModel>, Jso
             library.addAlbum(album);
         }
         
-        // Deserialize favorites
-        JsonArray favoritesArray = jsonObject.getAsJsonArray("favorites");
-        for (JsonElement element : favoritesArray) {
-            Song favorite = jDsContext.deserialize(element, Song.class);
-            library.addFavorite(favorite);
-        }
-
         // Deserialize playedSongs
         JsonArray playedSongsArray = jsonObject.getAsJsonArray("playedSongs");
         for (JsonElement element : playedSongsArray) {
