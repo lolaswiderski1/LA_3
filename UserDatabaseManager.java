@@ -24,7 +24,7 @@ public class UserDatabaseManager {
     public UserDatabaseManager(String databaseDirectory) {
         this.dataDirectory = databaseDirectory;
         loadDatabase();
-    }
+    } 
 
     private void loadDatabase() {
         File file = new File(dataDirectory + "/user_database.json");
