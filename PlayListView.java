@@ -1,6 +1,7 @@
 
 package view;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 
@@ -18,7 +19,6 @@ public class PlayListView extends LibraryView {
 	}
 	
 	public static void home() {
-		System.out.println(lib.getPlayLists());
 		System.out.println("[0] - create a playlist");
 		System.out.println("[1] - open the playlists in your library");
 		System.out.println("[2] - search for a playlist in your library");
@@ -91,19 +91,18 @@ public class PlayListView extends LibraryView {
 			mainHome();
 			return;
 		}
-		switch (choice) {
-		case 0: 
-			displayPlayList(lib.getRecents());
+		
+		PlayList selectedPlayList = playLists.get(choice);
+		String[] defaultNames = {"ROCK", "POP", "ALTERNATIVE", "TRADITIONAL COUNTRY", "SINGER/SONGWRITER",
+				"LATIN", "Most recent songs", "Most played songs", "Favorited songs"};
+		
+		if (Arrays.asList(defaultNames).contains(selectedPlayList.getName())) {
+			displayPlayList(selectedPlayList);
 			home();
-		case 1:
-			displayPlayList(lib.getFrequents());
-			home();
-		case 2:
-			displayPlayList(lib.getFavoritesPlayList());
-			home();
-		default:	
-			PlayList selectedPlayList = playLists.get(choice);
+			
+		} else {
 			playListChoices(selectedPlayList);
+			home();
 		}
 	}
 	
@@ -127,7 +126,7 @@ public class PlayListView extends LibraryView {
 		// method to handle removing and adding songs to a playlist
 		displayPlayList(playList);
 		// give user playlist options 
-		System.out.println("[0] - add a song");
+		System.out.println("[0] - add a song"); 
 		System.out.println("[1] - remove a song");
 		System.out.println("[2] - home");
 		// read option
@@ -168,7 +167,7 @@ public class PlayListView extends LibraryView {
 			mainHome();
 		}
 		// add a song to the playlist list 
-		playList.addSong(selectedSong);
+		playList.addSong(selectedSong); 
 		System.out.println(selectedSong + "has been added to " + playList.getName() + "\n");
 		// go home
 		mainHome();
